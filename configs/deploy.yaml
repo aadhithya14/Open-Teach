@@ -1,0 +1,15 @@
+defaults:
+  - _self_
+  - network
+  - camera
+  - robot: xela_hand_franka
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled  
+
+ 
+use_sensor: true
+
+hydra:  
+  output_subdir: null  
+  run:  
+    dir: .

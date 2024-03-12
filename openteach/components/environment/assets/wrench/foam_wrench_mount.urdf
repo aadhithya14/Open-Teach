@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<robot name="foam_wrench_mount">
+  <link name="object">
+    <visual>
+      <origin xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="foam_wrench_mount_coarse.obj"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.053 -0.024 0.1415"/>
+      <geometry>
+        <box size="0.35 0.06 0.283"/>
+        <!-- <mesh filename="foam_wrench_mount_coarse.obj"/> -->
+      </geometry>
+      <!-- <sdf resolution="10"/> -->
+    </collision>
+    <!-- <inertial>
+      <density value="400.0"/>
+    </inertial> -->
+  </link>
+</robot>

@@ -1,0 +1,72 @@
+robot_name: xela_hand_franka_dex_arm
+
+# Detection from the oculus
+detector:
+  _target_: openteach.components.detector.oculus.OculusVRHandDetector
+  host: ${host_address}
+  oculus_port: ${oculus_reciever_port}
+  keypoint_pub_port: ${keypoint_port}
+  button_port: ${resolution_button_port}
+  button_publish_port: ${resolution_button_publish_port}
+  teleop_reset_port: ${teleop_reset_port}
+  teleop_reset_publish_port: ${teleop_reset_publish_port}
+
+# Transforming the keypoints from the oculus
+transforms:
+  - 
+    _target_: openteach.components.detector.keypoint_transform.TransformHandPositionCoords
+    host: ${host_address}
+    keypoint_port: ${keypoint_port}
+    transformation_port: ${transformed_position_keypoint_port}
+    moving_average_limit: 1
+
+# Visualizers used to visualize the keypoints stream
+visualizers:
+  - 
+    _target_: openteach.components.visualizers.visualizer_2d.Hand2DVisualizer
+    host: ${host_address}
+    transformed_keypoint_port: ${transformed_position_keypoint_port}
+    oculus_feedback_port: ${oculus_graph_port}
+    display_plot: ${visualize_right_2d}
+
+  -
+    _target_: openteach.components.visualizers.xela_visualizer.XelaCurvedVisualizer
+    sensor:
+      _target_: openteach.components.sensors.xela.XelaCurvedSensors
+      init_duration: 2
+    display_plot: ${visualize_xela}
+
+# Operators used to retarget the keypoints
+operators:
+  # Allegro
+  -
+    _target_: openteach.components.operators.allegro.AllegroHandOperator
+    host: ${host_address}
+    transformed_keypoints_port: ${transformed_position_keypoint_port}
+    finger_configs:
+      freeze_index: false
+      freeze_middle: false
+      freeze_ring: false
+      freeze_thumb: false
+      no_index: false
+      no_middle: false 
+      no_ring: false
+      no_thumb: false
+      three_dim: true
+# List of controller classes used
+controllers:
+  # Allegro
+  -
+    _target_: openteach.robot.allegro.allegro.AllegroHand
+  # Franka Arm
+xela_controllers:
+  -
+    _target_: openteach.components.sensors.xela.XelaCurvedSensors
+    init_duration: 2
+
+recorded_data:
+  # Allegro
+  -
+    - joint_states
+    - commanded_joint_states
+

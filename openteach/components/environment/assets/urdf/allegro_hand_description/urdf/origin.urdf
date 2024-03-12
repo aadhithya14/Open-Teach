@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<robot name="table" xmlns:body="http://playerstage.sourceforge.net/gazebo/xmlschema/#body" xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller" xmlns:gazebo="http://playerstage.sourceforge.net/gazebo/xmlschema/#gz" xmlns:geom="http://playerstage.sourceforge.net/gazebo/xmlschema/#geom" xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface" xmlns:joint="http://playerstage.sourceforge.net/gazebo/xmlschema/#joint" xmlns:model="http://playerstage.sourceforge.net/gazebo/xmlschema/#model" xmlns:physics="http://playerstage.sourceforge.net/gazebo/xmlschema/#physics" xmlns:renderable="http://playerstage.sourceforge.net/gazebo/xmlschema/#renderable" xmlns:rendering="http://playerstage.sourceforge.net/gazebo/xmlschema/#rendering" xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor" xmlns:xi="http://www.w3.org/2001/XInclude">
+ <link name="allegro_mount">
+    <inertial>
+      <mass value="0.05"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <!-- inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4"/> -->
+    </inertial>
+    <visual>
+      <!-- <origin xyz="-0.0425 -0.0425 0" rpy="0 0 0" /> -->
+      <origin rpy="0 0 0" xyz="0.0 0 0"/>
+      <geometry>
+        <mesh filename="allegro_hand_description/meshes/mounts/Part3.STL"/>
+      </geometry>
+      <material name="color_j7"/>
+    </visual>
+    <collision>
+      <!-- <origin xyz="-0.0425 -0.0425 0" rpy="0 0 0" /> -->
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="allegro_hand_description/meshes/mounts/Part3.STL"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>

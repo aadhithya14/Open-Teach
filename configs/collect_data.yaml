@@ -1,0 +1,20 @@
+defaults:
+  - _self_
+  - camera
+  - network
+  - robot: xela_hand_franka
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled 
+
+storage_path: extracted_data/
+demo_num: 271
+sim_env: false
+is_xela: false
+host: ${host_address}
+
+
+
+hydra:  
+  output_subdir: null  
+  run:  
+    dir: .

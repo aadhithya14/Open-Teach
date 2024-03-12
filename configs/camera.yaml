@@ -1,0 +1,25 @@
+defaults:
+  - _self_
+  - network
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled 
+
+robot_cam_serial_numbers:
+  - '141722071999' # close to the robot
+  - '138422075648' # on top left corner
+  - '023422073116'
+
+cam_configs:
+  width: 1280
+  height: 720
+  fps: 30
+  processing_preset: 1 # High accuracy mode
+  rotation_angle: 0
+
+oculus_cam: 0 # First camera
+num_cams: 1
+
+hydra:  
+  output_subdir: null  
+  run:  
+    dir: .

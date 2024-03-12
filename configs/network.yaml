@@ -1,0 +1,44 @@
+host_address: '172.24.71.206'
+left_xarm_ip: '192.168.86.216'
+right_xarm_ip: '192.168.86.230'
+
+# Transformation ports
+oculus_reciever_port: 8087
+left_hand_receiver_port: 8110
+keypoint_port: 8088
+transformed_position_keypoint_port: 8089
+transformed_position_left_keypoint_port: 8099
+transformed_velocity_keypoint_port: 8090
+
+# Camera offsets
+cam_port_offset:  10005
+
+# Graph stream
+oculus_graph_port: 15001
+
+# Deployment port
+deployment_port: 10000
+
+pre_action_thumb_ee_position_port: 8091
+post_action_thumb_ee_position_port: 8092
+
+sim_image_port: 10005
+
+fish_eye_cam_port_offset: 10010
+
+resolution_button_port: 8095
+resolution_button_publish_port: 8093
+teleop_reset_port: 8100
+teleop_reset_publish_port: 8102
+gripper_publish_port_right: 8108
+gripper_publish_port_left: 8115
+
+cartesian_publisher_port: 8118
+joint_publisher_port: 8119
+cartesian_command_publisher_port: 8120
+
+cartesian_publisher_port_left: 8116
+joint_publisher_port_left: 8117
+cartesian_command_publisher_port_left: 8121
+
+

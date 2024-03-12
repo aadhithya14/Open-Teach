@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename= 'css/style.css') }}">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" 
+        integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+
+
+    <title>What is the Robot upto?</title>
+</head>
+
+
+<body>
+    <!-- Top Navigation Bar -->
+    <nav class="navbar sticky-top navbar-dark bg-dark p-3">
+        <div class="d-flex col-12 col-md-3 col-lg-2 mb-2 mb-lg-0 flex-wrap flex-md-nowrap justify-content-between">
+            <a class="navbar-brand mb-0 h1" href="#">
+                Dexterous Arm
+            </a>
+            <button class="navbar-toggler d-md-none collapsed mb-3" type="button" data-toggle="collapse" data-target="#sidebar" aria-controls="sidebar" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
+
+       
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <main class="col-md-10 mx-auto py-4">
+                <div class="jumbotron jumbotron-fluid">
+                    <h1 class="display-4">Dashboard</h1>
+                    <p class="lead">A real-time stream of what is happening on the robot.</p>
+                    <hr class="my-4">
+
+                    {%for cam_idx in range((num_cams // 2) + (num_cams % 2))%}
+                    <div class="container">
+                        <div class="row d-flex justify-content-center">
+                            <div class="col-sm-6">
+                                <div class="card">
+                                    <img class="card-img-top" src="{{ url_for('video_feed', id = (2 * cam_idx) + 1) }}">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="text-center">Camera {{ (2 * cam_idx) + 1 }}</h5>
+                                </div>
+                            </div>
+                            {% if (2 * cam_idx) + 2 <= num_cams %}
+                            <div class="col-sm-6">
+                                <div class="card">
+                                    <img class="card-img-top" src="{{ url_for('video_feed', id=(2 * cam_idx) + 2) }}">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="text-center">Camera {{ (2 * cam_idx) + 2 }}</h5>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {%endfor%}
+                </div>
+            </main>
+        </div>
+      </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- <div class="container">
+        <h2>Live stream of what's happening through all the cameras</h2>
+        <div class="row">
+            <div class="col-lg-6">
+                <img src="{{ url_for('video_feed', id = 1) }}" width="100%">
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('video_feed', id = 2) }}" width="100%">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-6">
+                <img src="{{ url_for('video_feed', id = 3) }}" width="100%">
+            </div>
+            <div class="col-lg-6">
+                <img src="{{ url_for('video_feed', id = 4) }}" width="100%">
+            </div>
+        </div>
+    </div> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js" integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+# VS Code config
+.vscode
+
+# Package Installation
+holo_bot.egg-info
+
+# Cache Folders
+*__pycache__*
+
+# Debugging scripts
+debuggers/
+
+# Calibration Files and Images
+# calibration_files/
+
+# Notebooks
+notebooks/*
+
+# Data
+extracted_data/*
+
+urdf/*
+# *.png
+*.jpg
+*.txt
+# *.npy
+*.h5
+
+*.mp4
+
+# Logs
+logs/*

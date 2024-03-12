@@ -1,0 +1,19 @@
+<robot name="wrench">
+	<link name="object">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="wrench4.stl" scale = "0.3 0.3 0.5"/>
+			</geometry>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="wrench4.stl" scale = "0.3 0.3 0.5"/>
+			</geometry>
+		<origin rpy="0 0 0" xyz="0 0 0" /></collision>
+		<inertial>
+			<mass value="0.010" />
+			<inertia ixx="0.00079" ixy="0.0" ixz="0.0" iyy="0.0001" iyz="0.0" izz="0.00008" />
+		</inertial>
+	</link>
+</robot>

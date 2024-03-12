@@ -1,0 +1,53 @@
+name: openteach_isaac
+channels:
+  - defaults
+dependencies:
+  - pip
+  - python=3.7
+  - readline=8.2
+  - setuptools=68.0.0
+  - sqlite=3.41.2
+  - tk=8.6.12
+  - wheel=0.41.2
+  - pytorch=1.8.1
+  - torchvision=0.9.1
+  - pyyaml=6.0 
+  - cudatoolkit=11.1
+
+  - pip:
+      - blosc
+      - contourpy
+      - cycler
+      - fonttools
+      - Flask
+      - gevent
+      - gunicorn
+      - gym
+      - h5py
+      - hydra-core
+      - kiwisolver
+      - matplotlib
+      - numpy
+      - omegaconf
+      - opencv-python
+      - packaging
+      - pandas
+      - pillow
+      - pybullet
+      - pyparsing
+      - pyrealsense2
+      - python-dateutil
+      - pytz
+      - pyyaml
+      - pyzmq
+      - scipy>=1.5.0
+      - six
+      - tensorboard>=2.2.1
+      - tqdm
+      - tzdata
+      - zmq
+      - ikpy
+      - shapely
+      - rospkg
+      - IPython
+

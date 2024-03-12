@@ -1,0 +1,24 @@
+defaults:
+  - _self_
+  - network
+  - robot: moving_allegro_sim
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled  
+
+
+# To run the robot 
+operate: true
+sim_env: true
+camera: false
+run_xela: false
+
+
+# Visualize 3D and 2D plots
+visualize_right_2d: false
+visualize_right_3d: false
+visualize_right_dir: false
+
+hydra:  
+  output_subdir: null  
+  run:  
+    dir: .

@@ -1,0 +1,78 @@
+wrist_bounds:
+  x:
+    -  0.39 # Right [0.39->Right, -0.05->Left]
+    - -0.05
+  y:
+    - 1.40 # Up [1.40->Up, 1.04->Down]
+    - 1.04
+  z: 
+    - 0.30 # Forward [0.30->Forward, 0.05->Back]
+    - 0.05
+
+# Bounds to perform linear transformation on the kinova arm
+# Large bounds of the robot
+# robot_bounds:
+#     x: 
+#       - 0.265 # Right [0.2640->Right, 0.771->Left]
+#       - 0.771  
+
+#     y: 
+#       - -0.085 # Foward [-0.085->Forward, 0.349->Back]
+#       - 0.349 
+      
+#     z:
+#       - 0.80 # Up [0.80->Up, 0.044->Down]
+#       - 0.10
+
+# Small box sized bounds
+# robot_bounds:
+#   x: 
+#     - 0.392 # Right [0.2640->Right, 0.771->Left]
+#     - 0.734  
+
+#   y: 
+#     - 0.024 # Foward [-0.085->Forward, 0.349->Back]
+#     - 0.289 
+    
+#   z:
+#     - 0.494 # Up [0.80->Up, 0.044->Down]
+#     - 0.313
+
+# Right hand large boudns
+robot_bounds:
+  x: 
+    - 0.722 # Right [0.722->Right, 0.406->Left]
+    - 0.406  
+
+  y: 
+    - 0.005 # Foward [0.005->Forward, -0.272->Back]
+    - -0.272 
+    
+  z:
+    - 0.494 # Up [0.80->Up, 0.044->Down]
+    - 0.264
+
+# Corresponding axes
+corresponding_robot_axes: # Robot : Human
+  x: 'x'
+  y: 'z'
+  z: 'y'
+
+# frame_realignment_matrix: [ # The one that passes the rotation_test
+#   1, 0, 0,
+#   0, 0, -1,
+#   0, 1, 0
+# ]
+
+frame_realignment_matrix: [
+  1, 0, 0,
+  0, 0, -1,
+  0, 1, 0
+]
+
+# Desired rotation alignment:
+rotation_alignment_matrix: [
+  0, 0,  0, # Then it will be -1 there
+  0, 0,  0,
+  0, 0,  -1
+]

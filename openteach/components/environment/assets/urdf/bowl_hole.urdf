@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<robot name="sponge">
+  <link name="sponge_link">
+    <visual>
+      <geometry>
+        <mesh filename="package://meshes/bowl/nontextured.stl" scale="0.5 0.5 0.7"/>
+      </geometry>
+    </visual>
+    <collision>
+      <geometry>
+        <mesh filename="package://meshes/bowl/nontextured.stl"  scale="0.5 0.5 0.7"/>
+      </geometry>
+    </collision>
+  </link>
+</robot>
+

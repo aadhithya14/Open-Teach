@@ -1,0 +1,19 @@
+<robot name="foam wrench">
+	<link name="object">
+		<visual>
+			<origin rpy="0 0 0" xyz="0 0 0" />
+			<geometry>
+				<mesh filename="foam_wrench.stl" scale = "1.0 1.0 0.75"/>
+			</geometry>
+		</visual>
+		<collision>
+			<geometry>
+				<mesh filename="foam_wrench.stl" scale = "1.0 1.0 0.75"/>
+			</geometry>
+		    <origin rpy="0 0 0" xyz="0 0 0" />
+        </collision>
+		<inertial>
+			<mass value="0.0075" />
+		</inertial>
+	</link>
+</robot>

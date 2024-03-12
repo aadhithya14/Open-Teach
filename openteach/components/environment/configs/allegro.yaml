@@ -1,0 +1,65 @@
+x_coord: 0.054 # Fixing X for 2D movement
+
+thumb_bounds:
+  # - # thumb_index
+  #   x_bounds: [0.0169, 0.117]
+  #   projective_bounds:
+  #     - # Top right
+  #       - 0.1154
+  #       - -0.0051
+  #     - # Bottom right
+  #       - 0.1321
+  #       - -0.0481
+  #     - # index_top
+  #       - 0.0495
+  #       - 0.0106
+  #     - # Index bottom
+  #       - 0.0413
+  #       - -0.1017
+
+  # - # index_middle
+  #   x_bounds: [0.054, 0.117]
+  #   projective_bounds:
+  #     - # index_top
+  #       - 0.0495
+  #       - 0.0106
+  #     - # index_bottom
+  #       - 0.0413
+  #       - -0.1017
+  #     - # middle_top
+  #       - 0.0094
+  #       - 0.0124
+  #     - # middle_bottom
+  #       -  0.0079
+  #       - -0.0997
+
+  # - # middle_ring
+  #   x_bounds: [0.0518, 0.117]
+  #   projective_bounds:
+  #     - # middle_top:
+  #       - 0.0094
+  #       - 0.0124
+  #     - # middle_bottom
+  #       -  0.0079
+  #       - -0.0997
+  #     - # ring_bottom
+  #       - -0.0373
+  #       - -0.0961
+  #     - # ring_top
+  #       - -0.024
+  #       - -0.0087
+  - # middle_ring
+    x_bounds: [0.054, 0.117] # Here we're getting the smallest limits
+    projective_bounds:
+      - # Top right
+        - 0.1154
+        - -0.0051
+      - # Bottom right
+        - 0.1321
+        - -0.0481
+      - # ring_bottom
+        - -0.0373
+        - -0.0961
+      - # ring_top
+        - -0.024
+        - -0.0087

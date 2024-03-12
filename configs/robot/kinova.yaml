@@ -1,0 +1,52 @@
+robot_name: kinova_arm
+
+# Detector used to teleoperate the robot
+detector:
+  _target_: openteach.components.detector.oculus.OculusVRHandDetector
+  host: ${host_address}
+  oculus_port: ${oculus_reciever_port}
+  keypoint_pub_port: ${keypoint_port}
+  button_port: ${resolution_button_port}
+  button_publish_port: ${resolution_button_publish_port}
+  teleop_reset_port: ${teleop_reset_port}
+  teleop_reset_publish_port: ${teleop_reset_publish_port}
+
+
+# Transformation classes used to transform the keypoints
+transforms:
+  - 
+    _target_: openteach.components.detector.keypoint_transform.TransformHandPositionCoords
+    host: ${host_address}
+    keypoint_port: ${keypoint_port}
+    transformation_port: ${transformed_position_keypoint_port}
+    moving_average_limit: 1
+
+# Visualizers used to visualize the keypoints stream
+visualizers:
+  -
+    _target_: openteach.components.visualizers.visualizer_2d.Hand2DVisualizer
+    host: ${host_address}
+    transformed_keypoint_port: ${transformed_position_keypoint_port}
+    oculus_feedback_port: ${oculus_graph_port}
+    display_plot: ${visualize_right_2d}
+
+# Operators used to retarget the keypoints
+operators:
+  - 
+    _target_: openteach.components.operators.kinova.KinovaArmOperator
+    host: ${host_address}
+    transformed_keypoints_port: ${transformed_position_keypoint_port}
+    moving_average_limit: 1
+    arm_resolution_port: ${resolution_button_publish_port}
+    use_filter: False
+    teleoperation_reset_port: ${teleop_reset_publish_port}
+
+# List of controller classes used
+controllers:
+  -
+    _target_: openteach.robot.kinova.KinovaArm
+
+recorded_data:
+  - 
+    - joint_states
+    - cartesian_states

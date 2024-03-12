@@ -1,0 +1,23 @@
+defaults:
+  - _self_
+  - network
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled 
+
+fisheye_cam_numbers:
+  - 24
+  - 26
+
+cam_configs:
+  width: 640
+  height: 480
+  fps: 30
+  
+
+oculus_cam: 0 # First camera
+stream_oculus: False
+
+hydra:  
+  output_subdir: null  
+  run:  
+    dir: .

@@ -1,0 +1,31 @@
+/************************************************************************************
+Copyright : Copyright (c) Facebook Technologies, LLC and its affiliates. All rights reserved.
+
+Your use of this SDK or tool is subject to the Oculus SDK License Agreement, available at
+https://developer.oculus.com/licenses/oculussdk/
+
+Unless required by applicable law or agreed to in writing, the Utilities SDK distributed
+under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF
+ANY KIND, either express or implied. See the License for the specific language governing
+permissions and limitations under the License.
+************************************************************************************/
+
+using UnityEngine;
+
+namespace Oculus.Interaction.Throw
+{
+    /// <summary>
+    /// Interface to input device that be used to drive mechanics like
+    /// throwing (via velocity calculation).
+    /// </summary>
+    public interface IPoseInputDevice
+    {
+        bool IsInputValid { get; }
+
+        bool IsHighConfidence { get; }
+
+        bool GetRootPose(out Pose pose);
+
+        (Vector3, Vector3) GetExternalVelocities();
+    }
+}

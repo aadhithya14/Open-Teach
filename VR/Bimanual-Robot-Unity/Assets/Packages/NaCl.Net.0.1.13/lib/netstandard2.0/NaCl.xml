@@ -1,0 +1,517 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>NaCl</name>
+    </assembly>
+    <members>
+        <member name="T:NaCl.Curve25519">
+            <summary>
+            NaCl.net provides an API to multiply a point on the Curve25519 curve.
+            This can be used as a building block to construct key exchange mechanisms, or more generally to compute a public key from a secret key.
+            </summary>
+        </member>
+        <member name="F:NaCl.Curve25519.ScalarLength">
+            <summary>
+            Length of a scalar on curve.
+            </summary>
+            <remarks>
+            32 bytes length.
+            </remarks>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplication(System.Span{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>
+            This function can be used to compute a shared secret q given a user's secret key and another user's public key.
+            </summary>
+            <param name="q">Resulted shared secret</param>
+            <param name="n">Secret key of alice</param>
+            <param name="p">Public key of bob</param>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplication(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>
+            This function can be used to compute a shared secret q given a user's secret key and another user's public key.
+            </summary>
+            <param name="n">Secret key of alice</param>
+            <param name="p">Public key of bob</param>
+            <returns>Shared key</returns>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplication(System.Byte[],System.Byte[])">
+            <summary>
+            This function can be used to compute a shared secret q given a user's secret key and another user's public key.
+            </summary>
+            <param name="n">Secret key of alice</param>
+            <param name="p">Public key of bob</param>
+            <returns>Shared key</returns>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplication(System.Byte[],System.Byte[],System.Byte[])">
+            <summary>
+            This function can be used to compute a shared secret q given a user's secret key and another user's public key.
+            </summary>
+            <param name="q">Resulted shared secret</param>
+            <param name="n">Secret key of alice</param>
+            <param name="p">Public key of bob</param>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplication(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            This function can be used to compute a shared secret q given a user's secret key and another user's public key.
+            </summary>
+            <param name="q">Resulted shared secret</param>
+            <param name="qOffset">Shared key offset to start write to</param>
+            <param name="n">Secret key of alice</param>
+            <param name="nOffset">Secret key offset to start read from</param>
+            <param name="p">Public key of bob</param>
+            <param name="pOffset">Public key offset, to start read from</param>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplicationBase(System.Span{System.Byte},System.Span{System.Byte})">
+            <summary>
+            Given a user's secret key n (<see cref="F:NaCl.Curve25519.ScalarLength"/> length), the ScalarMultiplicationBase function computes the user's public key and puts it into q.
+            </summary>
+            <param name="q">Public key, result of the multiplication</param>
+            <param name="n">Secret key, which will be multiplied with base</param>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplicationBase(System.Byte[],System.Byte[])">
+            <summary>
+            Given a user's secret key n (<see cref="F:NaCl.Curve25519.ScalarLength"/> length), the ScalarMultiplicationBase function computes the user's public key and puts it into q.
+            </summary>
+            <param name="q">Public key, result of the multiplication</param>
+            <param name="n">Secret key, which will be multiplied with base</param>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplicationBase(System.Byte[],System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Given a user's secret key n (<see cref="F:NaCl.Curve25519.ScalarLength"/> length), the ScalarMultiplicationBase function computes the user's public key and puts it into q.
+            </summary>
+            <param name="q">Public key, result of the multiplication</param>
+            <param name="qOffset">Public key offset to start write the in</param>
+            <param name="n">Secret key, which will be multiplied with base</param>
+            <param name="nOffset">Secret key offset, to start read from</param>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplicationBase(System.Span{System.Byte})">
+            <summary>
+            Given a user's secret key n (<see cref="F:NaCl.Curve25519.ScalarLength"/> length), the ScalarMultiplicationBase function computes the user's public key and puts it into q.
+            </summary>
+            <param name="n">Secret key, which will be multiplied with base</param>
+            <returns>Returns q, the public key</returns>
+        </member>
+        <member name="M:NaCl.Curve25519.ScalarMultiplicationBase(System.Byte[])">
+            <summary>
+            Given a user's secret key n (<see cref="F:NaCl.Curve25519.ScalarLength"/> length), the ScalarMultiplicationBase function computes the user's public key and puts it into q.
+            </summary>
+            <param name="n">Secret key, which will be multiplied with base</param>
+            <returns>Returns q, the public key</returns>
+        </member>
+        <member name="T:NaCl.Curve25519XSalsa20Poly1305">
+            <summary>
+            Public-key authenticated encryption.
+            </summary>
+            <remarks>
+            <para>
+            Using public-key authenticated encryption, Bob can encrypt a confidential message specifically for Alice,
+            using Alice's public key.</para>
+            <para>Using Bob's public key, Alice can compute a shared secret key. Using Alice's public key and his secret key,
+            Bob can compute the exact same shared secret key.
+            That shared secret key can be used to verify that the encrypted message was not tampered with,
+            before eventually decrypting it.</para>
+            <para>Alice only needs Bob's public key, the nonce and the ciphertext. Bob should never ever share his secret key,
+            even with Alice.</para>
+            <para>And in order to send messages to Alice, Bob only needs Alice's public key.
+            Alice should never ever share her secret key either, even with Bob.</para>
+            <para>Alice can reply to Bob using the same system, without having to generate a distinct key pair.</para>
+            <para>The nonce doesn't have to be confidential, but it should be used with just one invocation of <see>
+                <cref>Curve25519XSalsa20Poly1305.Encrypt</cref>
+            </see> for a particular pair of public and secret keys.</para>
+            <para>One easy way to generate a nonce is to use <see cref="T:System.Security.Cryptography.RandomNumberGenerator"/>,
+            considering the size of the nonces the risk of any random collisions is negligible.
+            For some applications, if you wish to use nonces to detect missing messages or to ignore replayed messages,
+            it is also acceptable to use a simple incrementing counter as a nonce.</para>
+            <para>When doing so you must ensure that the same value can never be re-used
+            (for example you may have multiple threads or even hosts generating messages using the same key pairs).</para>
+            <para>As stated above, senders can decrypt their own messages, and compute a valid authentication tag for any
+            messages encrypted with a given shared secret key. This is generally not an issue for online protocols.
+            If this is not acceptable, check out the Sealed Boxes section,
+            as well as the Key Exchange section in this documentation.</para>
+            </remarks>
+        </member>
+        <member name="F:NaCl.Curve25519XSalsa20Poly1305.SecretKeyLength">
+            <summary>
+            Length of the secret key, 32.
+            </summary>
+        </member>
+        <member name="F:NaCl.Curve25519XSalsa20Poly1305.PublicKeyLength">
+            <summary>
+            Length of the public key, 32.
+            </summary>
+        </member>
+        <member name="M:NaCl.Curve25519XSalsa20Poly1305.#ctor(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Create a new Curve25519XSalsa20Poly1305 and pre-calculate the shared secret from secret and public key.
+            </summary>
+            <param name="secretKey">SecretKey</param>
+            <param name="publicKey">PublicKey</param>
+        </member>
+        <member name="M:NaCl.Curve25519XSalsa20Poly1305.KeyPair(System.Span{System.Byte},System.Span{System.Byte})">
+            <summary>
+            Randomly generates a secret key and a corresponding public key.
+            </summary>
+            <param name="secretKey">Buffer the secret key will be written to.</param>
+            <param name="publicKey">Buffer the public key will be written to.</param>
+            <exception cref="T:System.ArgumentException">thrown if secretKey or publicKey are not 32 bytes long</exception>
+        </member>
+        <member name="M:NaCl.Curve25519XSalsa20Poly1305.KeyPair(System.Byte[],System.Byte[])">
+            <summary>
+            Randomly generates a secret key and a corresponding public key.
+            </summary>
+            <param name="secretKey">Buffer the secret key will be written to.</param>
+            <param name="publicKey">Buffer the public key will be written to.</param>
+            <exception cref="T:System.ArgumentException">thrown if secretKey or publicKey are not 32 bytes long</exception>
+        </member>
+        <member name="M:NaCl.Curve25519XSalsa20Poly1305.KeyPair(System.Byte[]@,System.Byte[]@)">
+            <summary>
+            Randomly generates a secret key and a corresponding public key.
+            </summary>
+            <param name="secretKey">Generated secret-key.</param>
+            <param name="publicKey">Corresponding public key</param>
+        </member>
+        <member name="M:NaCl.Curve25519XSalsa20Poly1305.KeyPair">
+            <summary>
+            Randomly generates a secret key and a corresponding public key.
+            </summary>
+            <returns>Returns a pair of secret-key and public-key</returns>
+        </member>
+        <member name="T:NaCl.Poly1305">
+            <summary>
+            One-time authentication using Poly1305.
+            </summary>
+            <remarks>
+            Poly1305 takes a 32-byte, one-time key and a message and produces a 16-byte tag that authenticates
+            the message such that an attacker has a negligible chance of producing a valid tag for a
+            inauthentic message.
+            </remarks>
+        </member>
+        <member name="F:NaCl.Poly1305.KeyLength">
+            <summary>
+            The length of the key, 32 bytes.
+            </summary>
+        </member>
+        <member name="F:NaCl.Poly1305.TagLength">
+            <summary>
+            The length of the produced tag, 16 bytes.
+            </summary>
+        </member>
+        <member name="M:NaCl.Poly1305.#ctor(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Create a new Poly1305 object with the specified key.
+            </summary>
+            <param name="key">The key</param>
+        </member>
+        <member name="M:NaCl.Poly1305.#ctor">
+            <summary>
+            Create a new Poly1305, key must be using <see>
+                <cref>SetKey</cref>
+            </see>
+            before calling <see>
+                <cref>Update</cref>
+            </see>
+            </summary>
+        </member>
+        <member name="M:NaCl.Poly1305.Dispose">
+            <summary>
+            Dispose the object and clear any sensitive buffers.
+            </summary>
+        </member>
+        <member name="M:NaCl.Poly1305.Reset">
+            <summary>
+            Reset the object to the initial state.
+            </summary>
+        </member>
+        <member name="M:NaCl.Poly1305.SetKey(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Set a new key
+            </summary>
+            <param name="key">Key</param>
+        </member>
+        <member name="M:NaCl.Poly1305.SetKey(System.Byte[],System.Int32)">
+            <summary>
+            Set a new key
+            </summary>
+            <param name="key">The key</param>
+            <param name="offset">The key offset</param>
+        </member>
+        <member name="M:NaCl.Poly1305.Final(System.Span{System.Byte})">
+            <summary>
+            Complete the authentication and produce the tag.
+            </summary>
+            <param name="tag">The will be written to the parameter.</param>
+        </member>
+        <member name="M:NaCl.Poly1305.Update(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Update the authentication with more bytes.
+            </summary>
+            <param name="bytes">Bytes</param>
+        </member>
+        <member name="M:NaCl.Poly1305.Update(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Update the authentication with more bytes.
+            </summary>
+            <param name="bytes">Bytes</param>
+            <param name="offset">Offset to write bytes from</param>
+            <param name="count">Number of bytes to write</param>
+        </member>
+        <member name="M:NaCl.Poly1305.Final">
+            <summary>
+            Complete the authentication and produce the tag.
+            </summary>
+            <returns>The authentication tag</returns>
+        </member>
+        <member name="M:NaCl.Poly1305.Verify(System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Compute the tag of the input and verify with provided tag.
+            </summary>
+            <param name="tag">The provided tag.</param>
+            <param name="input">The input to compute tag for.</param>
+            <returns>True if the tag match the input, otherwise false</returns>
+        </member>
+        <member name="M:NaCl.Poly1305.Verify(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Compute the tag of the input and verify with provided tag.
+            </summary>
+            <param name="tag">The provided tag.</param>
+            <param name="tagOffset">The offset to start read the tag from</param>
+            <param name="input">The input to compute tag for.</param>
+            <param name="inputOffset">The offset to start read input from</param>
+            <param name="inputCount">The amount of bytes to read from the input</param>
+            <returns>True if the tag match the input, otherwise false</returns>
+        </member>
+        <member name="T:NaCl.XSalsa20">
+            <summary>
+            XSalsa20 is a stream cipher based upon Salsa20 but with a much longer nonce: 192 bits instead of 64 bits.
+            </summary>
+            <remarks>
+            <para>XSalsa20 uses a 256-bit key as well as the first 128 bits of the nonce in order to compute a subkey.
+            This subkey, as well as the remaining 64 bits of the nonce, are the parameters of the Salsa20 function
+            used to actually generate the stream.
+            </para>
+            <para>
+            Like Salsa20, XSalsa20 is immune to timing attacks and provides its own 64-bit block counter to avoid
+            incrementing the nonce after each block.
+            </para>
+            <para>
+            But with XSalsa20's longer nonce, it is safe to generate nonces using
+            <see cref="T:System.Security.Cryptography.RandomNumberGenerator"/> for every message encrypted with the same key without having to
+            worry about a collision.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:NaCl.XSalsa20.KeyLength">
+            <summary>
+            The key length, 32 bytes.
+            </summary>
+        </member>
+        <member name="F:NaCl.XSalsa20.NonceLength">
+            <summary>
+            The nonce length, 24 bytes.
+            </summary>
+        </member>
+        <member name="M:NaCl.XSalsa20.#ctor(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Create a new XSalsa object with the specified key
+            </summary>
+            <param name="key">The key</param>
+            <exception cref="T:System.ArgumentException">Thrown if key length is not 32 bytes</exception>
+        </member>
+        <member name="M:NaCl.XSalsa20.#ctor(System.Byte[])">
+            <summary>
+            Create a new XSalsa object with the specified key
+            </summary>
+            <param name="key">The key</param>
+            <exception cref="T:System.ArgumentException">Thrown if key length is not 32 bytes</exception>
+        </member>
+        <member name="M:NaCl.XSalsa20.Dispose">
+            <summary>
+            Dispose the object and clear any sensitive data.
+            </summary>
+        </member>
+        <member name="M:NaCl.XSalsa20.Transform(System.Span{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Transform a message using a nonce and a secret key.
+            </summary>
+            <param name="output">Output will be written to the parameter.</param>
+            <param name="input">Input to transform</param>
+            <param name="nonce">Nonce</param>
+        </member>
+        <member name="M:NaCl.XSalsa20.Transform(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Transform a message using a nonce and a secret key.
+            </summary>
+            <param name="output">Output will be written to the parameter.</param>
+            <param name="outputOffset">Offset to start write to</param>
+            <param name="input">Input to transform</param>
+            <param name="inputOffset">Offset to start read from</param>
+            <param name="inputCount">Amount of bytes to read</param>
+            <param name="nonce">Nonce</param>
+            <param name="nonceOffset">Nonce offset</param>
+        </member>
+        <member name="T:NaCl.XSalsa20Poly1305">
+            <summary>
+            Encrypts a message with a key and a nonce to keep it confidential and
+            Computes an authentication tag. This tag is used to make sure that the message
+            hasn't been tampered with before decrypting it.
+            </summary>
+            <remarks>
+            <para>
+            A single key is used both to encrypt/authenticate and verify/decrypt messages.
+            For this reason, it is critical to keep the key confidential.
+            </para>
+            <para>
+            The nonce doesn't have to be confidential, but it should never ever be reused with the same key.
+            The easiest way to generate a nonce is to use <see cref="T:System.Security.Cryptography.RandomNumberGenerator"/>.
+            </para>
+            <para>
+            Messages encrypted are assumed to be independent.
+            If multiple messages are sent using this API and random nonces,
+            there will be no way to detect if a message has been received twice,
+            or if messages have been reordered.
+            </para>
+            </remarks>
+        </member>
+        <member name="F:NaCl.XSalsa20Poly1305.KeyLength">
+            <summary>
+            Key length, 32 bytes.
+            </summary>
+        </member>
+        <member name="F:NaCl.XSalsa20Poly1305.TagLength">
+            <summary>
+            Tag length, 16 bytes.
+            </summary>
+        </member>
+        <member name="F:NaCl.XSalsa20Poly1305.NonceLength">
+            <summary>
+            Nonce length, 24 bytes.
+            </summary>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.#ctor(System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Create a new object with the specified shared key
+            </summary>
+            <param name="key">Shared key</param>
+            <exception cref="T:System.ArgumentException">Thrown if key is not 32 bytes long</exception>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.#ctor(System.Byte[])">
+            <summary>
+            Create a new object with the specified shared key
+            </summary>
+            <param name="key">Shared key</param>
+            <exception cref="T:System.ArgumentException">Thrown if key is not 32 bytes long</exception>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.Encrypt(System.Span{System.Byte},System.Span{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Encrypts a message, with the object key and a nonce n.
+            </summary>
+            <remarks>
+            Detached mode, some applications may need to store the authentication tag and
+            the encrypted message at different locations.
+            </remarks>
+            <param name="cipher"></param>
+            <param name="mac"></param>
+            <param name="message"></param>
+            <param name="nonce"></param>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.Encrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Encrypts a message, with the object key and a nonce n.
+            </summary>
+            <remarks>
+            Detached mode, some applications may need to store the authentication tag and
+            the encrypted message at different locations.
+            </remarks>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.Encrypt(System.Span{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Encrypts a message, with the object key and a nonce n.
+            </summary>
+            <remarks>
+            Combined mode, the authentication tag and the encrypted message are stored together.
+            This is usually what you want.
+            </remarks>
+            <param name="cipher">Encrypted text will be written to the buffer</param>
+            <param name="message">Message to encrypt</param>
+            <param name="nonce">The nonce</param>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.Encrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Encrypts a message, with the object key and a nonce n.
+            </summary>
+            <remarks>
+            Combined mode, the authentication tag and the encrypted message are stored together.
+            This is usually what you want.
+            </remarks>
+            <param name="cipher">Encrypted text will be written to the buffer</param>
+            <param name="cipherOffset">Offset to start write the cipher text to</param>
+            <param name="message">Message to encrypt</param>
+            <param name="messageOffset">Offset to start read message from</param>
+            <param name="messageCount">Number of bytes to read from message</param>
+            <param name="nonce">The nonce</param>
+            <param name="nonceOffset">Nonce offset</param>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.TryDecrypt(System.Span{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Verifies and decrypts a ciphertext produced by <see>
+                <cref>Encrypt</cref>
+            </see>
+            </summary>
+            <remarks>
+            Detached mode, some applications may need to store the authentication tag and
+            the encrypted message at different locations.
+            </remarks>
+            <returns>True if successfully verified and decrypted ciphertext.</returns>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.TryDecrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Verifies and decrypts a ciphertext produced by <see>
+                <cref>Encrypt</cref>
+            </see>
+            </summary>
+            <remarks>
+            Detached mode, some applications may need to store the authentication tag and
+            the encrypted message at different locations.
+            </remarks>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.TryDecrypt(System.Span{System.Byte},System.ReadOnlySpan{System.Byte},System.ReadOnlySpan{System.Byte})">
+            <summary>
+            Verifies and decrypts a ciphertext produced by <see>
+                <cref>Encrypt</cref>
+            </see>
+            </summary>
+            <remarks>
+            Combined mode, the authentication tag and the encrypted message are stored together.
+            This is usually what you want.
+            </remarks>
+            <param name="message"></param>
+            <param name="cipher"></param>
+            <param name="nonce"></param>
+            <returns>True if successfully verified and decrypted ciphertext.</returns>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.TryDecrypt(System.Byte[],System.Int32,System.Byte[],System.Int32,System.Int32,System.Byte[],System.Int32)">
+            <summary>
+            Verifies and decrypts a ciphertext produced by <see>
+                <cref>Encrypt</cref>
+            </see>
+            </summary>
+            <remarks>
+            Combined mode, the authentication tag and the encrypted message are stored together.
+            This is usually what you want.
+            </remarks>
+            <param name="message"></param>
+            <param name="messageOffset"></param>
+            <param name="cipher"></param>
+            <param name="cipherOffset"></param>
+            <param name="cipherCount"></param>
+            <param name="nonce"></param>
+            <param name="nonceOffset"></param>
+            <returns>True if successfully verified and decrypted ciphertext.</returns>
+        </member>
+        <member name="M:NaCl.XSalsa20Poly1305.Dispose">
+            <summary>
+            Dispose the object and clear any sensitive information
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,41 @@
+# Bounds to clip the wrist keypoint values
+wrist_bounds:
+  x:
+    -  0.39
+    - -0.05
+  y:
+    - 1.04
+    - 1.40
+  z: 
+    - 0.30
+    - 0.05
+
+# Bounds to perform linear transformation on the kinova arm
+robot_bounds:
+    x: 
+      - -0.13980
+      - 0.4272
+    y: 
+      - -0.8105
+      - -0.45
+    z: 
+      - 0.06299321 #0.1051
+      - 0.4607
+
+# Corresponding axes
+corresponding_robot_axes:
+  x: 'x'
+  y: 'z'
+  z: 'y'
+
+kinova_frame_realignment_matrix: [
+  0, 1, 0,
+  0, 0, 1,
+  -1, 0, 0
+]
+
+kinova_rotation_alignment_matrix: [
+  0, 0,  0,
+  0, 0,  0,
+  0, 0,  -1
+]

@@ -1,0 +1,330 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Kaitai.Struct.Runtime</name>
+    </assembly>
+    <members>
+        <member name="T:Kaitai.KaitaiStream">
+            <summary>
+            The base Kaitai stream which exposes an API for the Kaitai Struct framework.
+            It's based off a <code>BinaryReader</code>, which is a little-endian reader.
+            </summary>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.#ctor(System.String)">
+            <summary>
+             Creates a KaitaiStream backed by a file (RO)
+            </summary>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.#ctor(System.Byte[])">
+            <summary>
+            Creates a KaitaiStream backed by a byte buffer
+            </summary>
+        </member>
+        <member name="P:Kaitai.KaitaiStream.IsEof">
+            <summary>
+            Check if the stream position is at the end of the stream
+            </summary>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.Seek(System.Int64)">
+            <summary>
+            Seek to a specific position from the beginning of the stream
+            </summary>
+            <param name="position">The position to seek to</param>
+        </member>
+        <member name="P:Kaitai.KaitaiStream.Pos">
+            <summary>
+            Get the current position in the stream
+            </summary>
+        </member>
+        <member name="P:Kaitai.KaitaiStream.Size">
+            <summary>
+            Get the total length of the stream (ie. file size)
+            </summary>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadS1">
+            <summary>
+            Read a signed byte from the stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadS2be">
+            <summary>
+            Read a signed short from the stream (big endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadS4be">
+            <summary>
+            Read a signed int from the stream (big endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadS8be">
+            <summary>
+            Read a signed long from the stream (big endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadS2le">
+            <summary>
+            Read a signed short from the stream (little endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadS4le">
+            <summary>
+            Read a signed int from the stream (little endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadS8le">
+            <summary>
+            Read a signed long from the stream (little endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadU1">
+            <summary>
+            Read an unsigned byte from the stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadU2be">
+            <summary>
+            Read an unsigned short from the stream (big endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadU4be">
+            <summary>
+            Read an unsigned int from the stream (big endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadU8be">
+            <summary>
+            Read an unsigned long from the stream (big endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadU2le">
+            <summary>
+            Read an unsigned short from the stream (little endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadU4le">
+            <summary>
+            Read an unsigned int from the stream (little endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadU8le">
+            <summary>
+            Read an unsigned long from the stream (little endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadF4be">
+            <summary>
+            Read a single-precision floating point value from the stream (big endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadF8be">
+            <summary>
+            Read a double-precision floating point value from the stream (big endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadF4le">
+            <summary>
+            Read a single-precision floating point value from the stream (little endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadF8le">
+            <summary>
+            Read a double-precision floating point value from the stream (little endian)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadBitsIntBe(System.Int32)">
+            <summary>
+            Read a n-bit integer in a big-endian manner from the stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadBitsIntLe(System.Int32)">
+            <summary>
+            Read a n-bit integer in a little-endian manner from the stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadBytes(System.Int64)">
+            <summary>
+            Read a fixed number of bytes from the stream
+            </summary>
+            <param name="count">The number of bytes to read</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadBytes(System.UInt64)">
+            <summary>
+            Read a fixed number of bytes from the stream
+            </summary>
+            <param name="count">The number of bytes to read</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadBytesNormalisedLittleEndian(System.Int32)">
+            <summary>
+            Read bytes from the stream in little endian format and convert them to the endianness of the current platform
+            </summary>
+            <param name="count">The number of bytes to read</param>
+            <returns>An array of bytes that matches the endianness of the current platform</returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadBytesNormalisedBigEndian(System.Int32)">
+            <summary>
+            Read bytes from the stream in big endian format and convert them to the endianness of the current platform
+            </summary>
+            <param name="count">The number of bytes to read</param>
+            <returns>An array of bytes that matches the endianness of the current platform</returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadBytesFull">
+            <summary>
+            Read all the remaining bytes from the stream until the end is reached
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ReadBytesTerm(System.Byte,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Read a terminated string from the stream
+            </summary>
+            <param name="terminator">The string terminator value</param>
+            <param name="includeTerminator">True to include the terminator in the returned string</param>
+            <param name="consumeTerminator">True to consume the terminator byte before returning</param>
+            <param name="eosError">True to throw an error when the EOS was reached before the terminator</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.EnsureFixedContents(System.Byte[])">
+            <summary>
+            Read a specific set of bytes and assert that they are the same as an expected result
+            </summary>
+            <param name="expected">The expected result</param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ProcessXor(System.Byte[],System.Int32)">
+            <summary>
+            Performs XOR processing with given data, XORing every byte of the input with a single value.
+            </summary>
+            <param name="value">The data toe process</param>
+            <param name="key">The key value to XOR with</param>
+            <returns>Processed data</returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ProcessXor(System.Byte[],System.Byte[])">
+            <summary>
+            Performs XOR processing with given data, XORing every byte of the input with a key
+            array, repeating from the beginning of the key array if necessary
+            </summary>
+            <param name="value">The data toe process</param>
+            <param name="key">The key array to XOR with</param>
+            <returns>Processed data</returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ProcessRotateLeft(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Performs a circular left rotation shift for a given buffer by a given amount of bits.
+            Pass a negative amount to rotate right.
+            </summary>
+            <param name="data">The data to rotate</param>
+            <param name="amount">The number of bytes to rotate by</param>
+            <param name="groupSize"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ProcessZlib(System.Byte[])">
+            <summary>
+            Inflates a deflated zlib byte stream
+            </summary>
+            <param name="data">The data to deflate</param>
+            <returns>The deflated result</returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.Mod(System.Int32,System.Int32)">
+            <summary>
+            Performs modulo operation between two integers.
+            </summary>
+            <remarks>
+            This method is required because C# lacks a "true" modulo
+            operator, the % operator rather being the "remainder"
+            operator. We want mod operations to always be positive.
+            </remarks>
+            <param name="a">The value to be divided</param>
+            <param name="b">The value to divide by. Must be greater than zero.</param>
+            <returns>The result of the modulo opertion. Will always be positive.</returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.Mod(System.Int64,System.Int64)">
+            <summary>
+            Performs modulo operation between two integers.
+            </summary>
+            <remarks>
+            This method is required because C# lacks a "true" modulo
+            operator, the % operator rather being the "remainder"
+            operator. We want mod operations to always be positive.
+            </remarks>
+            <param name="a">The value to be divided</param>
+            <param name="b">The value to divide by. Must be greater than zero.</param>
+            <returns>The result of the modulo opertion. Will always be positive.</returns>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.ByteArrayCompare(System.Byte[],System.Byte[])">
+            <summary>
+            Compares two byte arrays in lexicographical order.
+            </summary>
+            <returns>negative number if a is less than b, <c>0</c> if a is equal to b, positive number if a is greater than b.</returns>
+            <param name="a">First byte array to compare</param>
+            <param name="b">Second byte array to compare.</param>
+        </member>
+        <member name="M:Kaitai.KaitaiStream.StringReverse(System.String)">
+            <summary>
+            Reverses the string, Unicode-aware.
+            </summary>
+            <a href="https://stackoverflow.com/a/15029493">taken from here</a>
+        </member>
+        <member name="T:Kaitai.CustomDecoder">
+            <summary>
+            A custom decoder interface. Implementing classes can be called from
+            inside a .ksy file using `process: XXX` syntax.
+            </summary>
+        </member>
+        <member name="M:Kaitai.CustomDecoder.Decode(System.Byte[])">
+            <summary>
+            Decodes a given byte array, according to some custom algorithm
+            (specific to implementing class) and parameters given in the
+            constructor, returning another byte array.
+            </summary>
+            <param name="src">Source byte array.</param>
+        </member>
+        <member name="T:Kaitai.UndecidedEndiannessError">
+            <summary>
+            Error that occurs when default endianness should be decided with a
+            switch, but nothing matches (although using endianness expression
+            implies that there should be some positive result).
+            </summary>
+        </member>
+        <member name="T:Kaitai.KaitaiStructError">
+            <summary>
+            Common ancestor for all error originating from Kaitai Struct usage.
+            Stores KSY source path, pointing to an element supposedly guilty of
+            an error.
+            </summary>
+        </member>
+        <member name="T:Kaitai.ValidationFailedError">
+            <summary>
+            Common ancestor for all validation failures. Stores pointer to
+            KaitaiStream IO object which was involved in an error.
+            </summary>
+        </member>
+        <member name="T:Kaitai.ValidationNotEqualError">
+            <summary>
+            Signals validation failure: we required "actual" value to be equal to
+            "expected", but it turned out that it's not.
+            </summary>
+        </member>
+    </members>
+</doc>

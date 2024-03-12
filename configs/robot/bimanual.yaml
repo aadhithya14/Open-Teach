@@ -1,0 +1,87 @@
+robot_name: bimanual
+
+# Detector used to teleoperate the robot
+detector:
+  _target_: openteach.components.detector.oculusbimanual.OculusVRTwoHandDetector
+  host: ${host_address}
+  oculus_right_port: ${oculus_reciever_port}
+  oculus_left_port: ${left_hand_receiver_port}
+  keypoint_pub_port: ${keypoint_port}
+  button_port: ${resolution_button_port}
+  button_publish_port: ${resolution_button_publish_port}
+  
+
+# Transformation classes used to transform the keypoints
+transforms:
+  - 
+    _target_: openteach.components.detector.keypoint_transform.TransformHandPositionCoords
+    host: ${host_address}
+    keypoint_port: ${keypoint_port}
+    transformation_port: ${transformed_position_keypoint_port}
+    moving_average_limit: 1
+
+  - 
+    _target_: openteach.components.detector.left_keypoint_transform.TransformLeftHandPositionCoords
+    host: ${host_address}
+    keypoint_port: ${keypoint_port}
+    transformation_port: ${transformed_position_left_keypoint_port}
+    moving_average_limit: 1
+
+# Visualizers used to visualize the keypoints stream
+visualizers:
+  -
+    _target_: openteach.components.visualizers.visualizer_2d.Hand2DVisualizer
+    host: ${host_address}
+    transformed_keypoint_port: ${transformed_position_keypoint_port}
+    oculus_feedback_port: ${oculus_graph_port}
+    display_plot: ${visualize_right_2d}
+
+# Operators used to retarget the keypoints
+operators:
+  - 
+    _target_: openteach.components.operators.bimanual_right.BimanualArmOperator
+    host: ${host_address}
+    transformed_keypoints_port: ${transformed_position_keypoint_port}
+    arm_resolution_port: ${resolution_button_publish_port} 
+    gripper_port: ${gripper_publish_port_right}
+    use_filter: True
+    cartesian_publisher_port: ${cartesian_publisher_port}
+    joint_publisher_port: ${joint_publisher_port}
+    cartesian_command_publisher_port: ${cartesian_command_publisher_port}
+    
+  -
+    _target_: openteach.components.operators.bimanual_left.BimanualLeftArmOperator
+    host: ${host_address}
+    transformed_keypoints_port: ${transformed_position_left_keypoint_port}
+    arm_resolution_port: ${resolution_button_publish_port} 
+    gripper_port: ${gripper_publish_port_left}
+    use_filter: True
+    cartesian_publisher_port: ${cartesian_publisher_port_left}
+    joint_publisher_port: ${joint_publisher_port_left}
+    cartesian_command_publisher_port: ${cartesian_command_publisher_port_left}
+
+# List of controller classes used
+controllers:
+ 
+  -
+    _target_: openteach.robot.bimanual.Bimanual
+    ip: ${right_xarm_ip}
+    record: False
+
+  -
+    _target_: openteach.robot.bimanual_left.BimanualLeft
+    ip: ${left_xarm_ip}
+    record: False
+
+
+# Information to be recorded for the robot 
+recorded_data:
+  - 
+    - joint_states
+    - cartesian_states
+    - gripper_states
+
+  - 
+    - joint_states
+    - cartesian_states
+    - gripper_states

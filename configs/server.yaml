@@ -1,0 +1,13 @@
+defaults:
+  - _self_
+  - network
+  - camera
+  - override hydra/hydra_logging: disabled  
+  - override hydra/job_logging: disabled 
+
+server_name: 'Hand Server'
+
+hydra:  
+  output_subdir: null  
+  run:  
+    dir: .

@@ -1,0 +1,94 @@
+robot_name: allegro_sim
+
+# Detection from the oculus
+detector:
+  _target_: openteach.components.detector.oculus.OculusVRHandDetector
+  host: ${host_address}
+  oculus_port: ${oculus_reciever_port}
+  keypoint_pub_port: ${keypoint_port}
+  button_port: ${resolution_button_port}
+  button_publish_port: ${resolution_button_publish_port}
+  teleop_reset_port: ${teleop_reset_port}
+  teleop_reset_publish_port: ${teleop_reset_publish_port}
+
+
+# Transforming the keypoints from the oculus
+transforms:
+  - 
+    _target_: openteach.components.detector.keypoint_transform.TransformHandPositionCoords
+    host: ${host_address}
+    keypoint_port: ${keypoint_port}
+    transformation_port: ${transformed_position_keypoint_port}
+    moving_average_limit: 1
+
+# Visualizers used to visualize the keypoints stream
+visualizers:
+  - 
+    _target_: openteach.components.visualizers.visualizer_2d.Hand2DVisualizer
+    host: ${host_address}
+    transformed_keypoint_port: ${transformed_position_keypoint_port}
+    oculus_feedback_port: ${oculus_graph_port}
+    display_plot: ${visualize_right_2d}
+
+# Operators used to retarget the keypoints
+operators:
+  - 
+    _target_: openteach.components.operators.allegro_sim.AllegroHandSimOperator
+    host: ${host_address}
+    transformed_keypoints_port: ${transformed_position_keypoint_port}
+    finger_configs:
+      freeze_index: false
+      freeze_middle: false
+      freeze_ring: false
+      freeze_thumb: false
+      no_index: false
+      no_middle: false
+      no_ring: false
+      no_thumb: false
+      three_dim: true
+    stream_configs:
+      host: ${host_address}
+      port: ${sim_image_port}
+    stream_oculus: true
+    jointanglepublishport: 10013
+    jointanglesubscribeport: 10012
+
+# Simulation Environment used to visualize the hand
+environment:
+  - 
+    _target_: openteach.components.environment.allegro_hand_env.AllegroHandEnv
+    host: ${host_address}
+    camport: ${sim_image_port}
+    jointanglepublishport: 10012
+    jointanglesubscribeport: 10013
+    timestamppublisherport: 10008
+    endeff_publish_port: 10009
+    endeffpossubscribeport: 10010
+    actualanglepublishport: 10011
+    stream_oculus: true
+    num_per_row: 1
+    spacing: 2.5
+    show_axis: 0 
+    env_suite: 'cube_flipping' 
+    control_mode: 'Position_Velocity'
+    object: 'block'
+    asset: 'allegro_hand'
+
+port_configs:
+  -
+    robot: 'allegro'
+    host: ${host_address}
+    port: ${sim_image_port}
+    jointanglepublishport: 10012
+    jointanglesubscribeport: 10013
+    timestampssubscribeport: 10008
+    actualjointanglesubscribeport: 10011   
+    endeffpossubscribeport: 10010
+    endeff_publish_port: 10009
+
+
+recorded_data:
+  - 
+    - joint_states
+    - commanded_joint_states
+

@@ -1,0 +1,82 @@
+robot_name: libero_sim
+
+# Detection from the oculus
+detector:
+  _target_: openteach.components.detector.oculusbimanual.OculusVRTwoHandDetector
+  host: ${host_address}
+  oculus_right_port: ${oculus_reciever_port}
+  oculus_left_port: ${left_hand_receiver_port}
+  keypoint_pub_port: ${keypoint_port}
+  button_port: ${resolution_button_port}
+  button_publish_port: ${resolution_button_publish_port}
+  
+
+
+# Transforming the keypoints from the oculus
+transforms:
+  - 
+    _target_: openteach.components.detector.keypoint_transform.TransformHandPositionCoords
+    host: ${host_address}
+    keypoint_port: ${keypoint_port}
+    transformation_port: ${transformed_position_keypoint_port}
+    moving_average_limit: 1
+
+
+# Visualizers used to visualize the keypoints stream
+visualizers:
+  - 
+    _target_: openteach.components.visualizers.visualizer_2d.Hand2DVisualizer
+    host: ${host_address}
+    transformed_keypoint_port: ${transformed_position_keypoint_port}
+    oculus_feedback_port: ${oculus_graph_port}
+    display_plot: ${visualize_right_2d}
+
+
+operators:
+  - 
+    _target_: openteach.components.operators.libero_sim.LiberoSimOperator
+    host: ${host_address}
+    transformed_keypoints_port: ${transformed_position_keypoint_port}
+    stream_configs:
+      host: ${host_address}
+      port: ${sim_image_port}
+    stream_oculus: true
+    endeff_publish_port: 10010
+    endeffpossubscribeport: 10009
+    robotposesubscribeport: 11111
+    moving_average_limit: 10
+    arm_resolution_port: ${resolution_button_publish_port} 
+
+
+environment:
+  - 
+    _target_: openteach.components.environment.libero_env.LiberoEnv
+    host: ${host_address}
+    camport: ${sim_image_port}
+    timestamppublisherport: 10008
+    endeff_publish_port: 10009
+    endeffpossubscribeport: 10010
+    robotposepublishport: 11111
+    stream_oculus: true
+    suite_name: libero_90
+    # task_name: LIVING_ROOM_SCENE3_pick_up_the_cream_cheese_and_put_it_in_the_tray #KITCHEN_SCENE7_open_the_microwave
+    # task_name: KITCHEN_SCENE3_put_the_moka_pot_on_the_stove
+    task_name: LIVING_ROOM_SCENE2_pick_up_the_alphabet_soup_and_put_it_in_the_basket
+
+
+port_configs:
+  -
+    robot: 'endeffector'
+    host: ${host_address}
+    port: ${sim_image_port}
+    jointanglepublishport: 10012
+    jointanglesubscribeport: 10013
+    timestampssubscribeport: 10008
+    actualjointanglesubscribeport: 10011   
+    endeffpossubscribeport: 10010
+    endeff_publish_port: 10009
+    
+recorded_data:
+  - 
+    - cartesian_states
+    - commanded_cartesian_states

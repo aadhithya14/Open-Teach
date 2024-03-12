@@ -1,0 +1,1 @@
+from .allegro import AllegroSampler

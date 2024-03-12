@@ -1,0 +1,15 @@
+﻿{
+  "IPAddress": "undefined",
+  "rightkeyptPortNum": "8087",
+  "leftkeyptPortNum": "8110",
+  "camPortNum": "10505",
+  "graphPortNum": "15001",
+  "resolutionPortNum": "8095",
+  "PausePortNum": "8100",
+  "rightgripperPortNum": "8105",
+  "leftgripperPortNum": "8106",
+  "LeftPausePortNum": "8107",
+  "RightPausePortNum": "8109",
+  "LeftGripperRotatePortNum": "8112",
+  "RightGripperRotatePortNum": "8113"
+}
