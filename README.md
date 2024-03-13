@@ -19,7 +19,7 @@ Read VR specific information, User Interface and APK files [here](/docs/vr.md)
 ### Server Code Installation 
 
 Install the conda environment from the yaml file in the codebase
- 
+
 **Allegro Sim**
 
 `conda env create -f env_isaac.yml`
@@ -59,7 +59,7 @@ For open-source code of the policies we trained on the robots refer [here](/docs
 
 For adding your own robot and simulation refer [here](/docs/add_your_own_robot.md)
 
-## Citation
+### Citation
 If you use this repo in your research, please consider citing the paper as follows:
 ```@misc{iyer2024open,
       title={OPEN TEACH: A Versatile Teleoperation System for Robotic Manipulation}, 
