@@ -3,6 +3,7 @@
 ##### Authors: Aadhithya Iyer ,Zhuoran Peng, Yinlong Dai, Irmak Guzey, Siddhant Haldar, Soumith Chintala, Lerrel Pinto 
 
 [Paper](https://arxiv.org/abs/2403.07870) [Website](https://open-teach.github.io/)
+
 This is the official implementation of the Open Teach including unity scripts for the VR application, teleoperation pipeline and demonstration collection pipeline.
 
 Open Teach consists of two parts. 
@@ -17,7 +18,8 @@ Read VR specific information, User Interface and APK files [here](/docs/vr.md)
 
 ### Server Code Installation 
 
-Install the conda environment from the yaml file in the codebase 
+Install the conda environment from the yaml file in the codebase
+ 
 **Allegro Sim**
 
 `conda env create -f env_isaac.yml`
