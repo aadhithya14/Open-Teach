@@ -61,7 +61,8 @@ For adding your own robot and simulation refer [here](/docs/add_your_own_robot.m
 
 ### Citation
 If you use this repo in your research, please consider citing the paper as follows:
-```@misc{iyer2024open,
+```
+@misc{iyer2024open,
       title={OPEN TEACH: A Versatile Teleoperation System for Robotic Manipulation}, 
       author={Aadhithya Iyer and Zhuoran Peng and Yinlong Dai and Irmak Guzey and Siddhant Haldar and Soumith Chintala and Lerrel Pinto},
       year={2024},
