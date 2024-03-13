@@ -1,5 +1,8 @@
 # OPEN TEACH: A Versatile Teleoperation System for Robotic Manipulation
 
+##### Authors: Aadhithya Iyer ,Zhuoran Peng, Yinlong Dai, Irmak Guzey, Siddhant Haldar, Soumith Chintala, Lerrel Pinto 
+
+[Paper](https://arxiv.org/abs/2403.07870) [Website](https://open-teach.github.io/)
 This is the official implementation of the Open Teach including unity scripts for the VR application, teleoperation pipeline and demonstration collection pipeline.
 
 Open Teach consists of two parts. 
@@ -54,8 +57,16 @@ For open-source code of the policies we trained on the robots refer [here](/docs
 
 For adding your own robot and simulation refer [here](/docs/add_your_own_robot.md)
 
-
-
+## Citation
+If you use this repo in your research, please consider citing the paper as follows:
+```@misc{iyer2024open,
+      title={OPEN TEACH: A Versatile Teleoperation System for Robotic Manipulation}, 
+      author={Aadhithya Iyer and Zhuoran Peng and Yinlong Dai and Irmak Guzey and Siddhant Haldar and Soumith Chintala and Lerrel Pinto},
+      year={2024},
+      eprint={2403.07870},
+      archivePrefix={arXiv},
+      primaryClass={cs.RO}
+}
 
 
 
