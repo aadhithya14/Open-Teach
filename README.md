@@ -59,6 +59,3 @@ For adding your own robot and simulation refer [here](/docs/add_your_own_robot.m
 
 
 
-
-
-# Open-Teach
