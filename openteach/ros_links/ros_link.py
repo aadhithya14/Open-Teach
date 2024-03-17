@@ -1,10 +1,16 @@
 import numpy as np
 import time
+import rospy
+from copy import deepcopy as copy
+
 
 class DexArmControl():
     def __init__(self, record_type=None, robot_type='both'):
     # Initialize Controller Specific Information
-    
+        try:
+                rospy.init_node("dex_arm", disable_signals = True, anonymous = True)
+        except:
+                pass
     # Controller initializers
     def _init_robot_control(self):
         # Have the ROS subscribers and publishers here

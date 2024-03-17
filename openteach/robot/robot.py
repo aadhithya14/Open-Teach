@@ -25,6 +25,10 @@ class RobotWrapper(ABC):
         pass
 
     @abstractmethod
+    def get_cartesian_position(self):
+        pass
+
+    @abstractmethod
     def get_joint_velocity(self):
         pass
 
@@ -42,4 +46,16 @@ class RobotWrapper(ABC):
 
     @abstractmethod
     def move_coords(self, input_coords):
+        pass
+
+    @abstractmethod
+    def reset(self):
+        pass
+
+    @abstractmethod
+    def arm_control(self):
+        pass
+
+    @abstractmethod
+    def set_gripper_state(self):
         pass
