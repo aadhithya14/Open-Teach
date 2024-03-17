@@ -8,7 +8,7 @@ To add any robot manipulator/simulation to Open-Teach, all you need to write are
 
 - [x] ROBOT WRAPPER: You have to write a wrapper for any robot for getting the basic information of the robot and to send information to the robot. For an example on how to create this robot wrapper check [here](https://github.com/aadhithya14/Open-Teach/blob/main/openteach/robot/robot.py).
 
-- [x] OPERATOR: This is the wrapper which does helps in the teleoperation . For creating a new wrapper for this ,most parts in this file can be reused from any of the manipulator codefiles in [here](https://github.com/aadhithya14/Open-Teach/tree/main/openteach/components/operators). The transformations might have to be tuned accordingly as per your requirements. 
+- [x] OPERATOR: This is the wrapper which does helps in the teleoperation . For creating a new wrapper for this ,most parts in this file can be reused from any of the manipulator codefiles in [here](https://github.com/aadhithya14/Open-Teach/tree/main/openteach/components/operators/template.py). The transformations might have to be tuned accordingly as per your requirements. 
     - [x] Velocity Control - Kinova file in the operator directory uses velocity control and shows how you can integrate a robot with velocity control into openteach.
 
     - [x] Position Control - Franka and Xarm in the operator directory uses position control and shows how you can integrate any robot with position control with openteach.
