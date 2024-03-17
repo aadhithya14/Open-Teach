@@ -39,7 +39,7 @@ class Filter:
         return np.concatenate([self.pos_state, self.ori_state])
 
 # Bimanual right arm operator class
-class BimanualArmOperator(Operator):
+class TemplateArmOperator(Operator):
     def __init__(
         self,
         host, transformed_keypoints_port,
