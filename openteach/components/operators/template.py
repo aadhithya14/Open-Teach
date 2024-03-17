@@ -23,7 +23,6 @@ from numpy.linalg import pinv
 
 np.set_printoptions(precision=2, suppress=True)
 
-
 # Filter for removing noise in the teleoperation
 class Filter:
     def __init__(self, state, comp_ratio=0.6):
