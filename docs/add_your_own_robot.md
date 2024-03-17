@@ -20,3 +20,7 @@ To add any robot manipulator/simulation to Open-Teach, all you need to write are
 
 - [x] Arm simulation suite- You can inherit [arm_env](https://github.com/aadhithya14/Open-Teach/blob/main/openteach/components/environment/arm_env.py) from environment directory if you want to add any new environment.
 Similarly you can create your own operator like libero_sim operator using most components of it. Libero sim uses relative pose as actions, but you can choose to use position control in the new wrapper which you want to add. The comments on how to use any simulation arm with position control is mentioned in the comments of libero_sim.
+
+3. Configs
+
+- You need to add a robot/sim config to use a new robot/simulation. Follow the template [config](configs/robot/template_robot) for a single arm. Follow [config](configs/robot/bimanual) for bimanual arm.

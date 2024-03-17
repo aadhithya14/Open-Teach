@@ -37,7 +37,7 @@ class Filter:
         self.ori_state = ori_interp([1 - self.comp_ratio])[0].as_rotvec()
         return np.concatenate([self.pos_state, self.ori_state])
 
-# Bimanual right arm operator class
+#Template arm operator class
 class TemplateArmOperator(Operator):
     def __init__(
         self,
