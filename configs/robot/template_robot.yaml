@@ -1,4 +1,4 @@
-robot_name: franka_arm
+robot_name: robot_arm
 
 # Detector used to teleoperate the robot
 detector:
