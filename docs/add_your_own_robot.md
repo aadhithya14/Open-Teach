@@ -23,4 +23,4 @@ Similarly you can create your own operator like libero_sim operator using most c
 
 3. Configs
 
-- You need to add a robot/sim config to use a new robot/simulation. Follow the template [config](configs/robot/template_robot) for a single arm. Follow [config](configs/robot/bimanual) for bimanual arm.
+- You need to add a robot/sim config to use a new robot/simulation. Follow the template [config](configs/robot/template_robot.yaml) for a single arm. Follow [config](configs/robot/bimanual.yaml) for bimanual arm.
