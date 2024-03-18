@@ -42,3 +42,7 @@ The VR APK files are available [here](/VR/APK/).
 After you install the APK file. You will be prompted with a blank screen with red border with a Menu button on it. Click the Menu button, you will see IP: Not Defined. Just Click on Change IP and enter the IP using the dropdown (The VR and the Robot should be under the same network provider). Once the IP is enter go back to the screen where you clicked Change IP and Click Stream. The screen border will become green and  your App is ready to stream the keypoints.
 
 #### Note: Remember to enter your same IP on the server host address variable [config](/configs/network.yaml)
+
+Once finished setting up the APK proceed to [teleop](/docs/teleop_data_collect.md).
+
+If Teleoperation server is not started, the APK will work for sometime and stop as there are ports to send the information to. 
