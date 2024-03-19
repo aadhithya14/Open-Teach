@@ -55,6 +55,10 @@ For information on running the teleoperation and data collection refer [here](/d
 
 For open-source code of the policies we trained on the robots refer [here](/docs/policy_learning.md) 
 
+### Policy Learning API
+
+For using the API we use for policy learning, use [this](https://github.com/NYU-robot-learning/Open-Teach-API)
+
 ### Call for contributions
 
 For adding your own robot and simulation refer [here](/docs/add_your_own_robot.md)
