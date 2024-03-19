@@ -5,6 +5,13 @@ import numpy as np
 import pickle
 import blosc as bl
 import threading
+from queue import Queue, Empty
+import subprocess
+import os
+import time
+import socket
+import struct
+from threading import Thread
 
 # ZMQ Sockets
 def create_push_socket(host, port):
@@ -252,3 +259,223 @@ class ZMQButtonFeedbackSubscriber(threading.Thread):
         print('Closing the subscriber socket in {}:{}.'.format(self._host, self._port))
         self.socket.close()
         self.context.term()
+
+class SCRCPY_client():
+    def __init__(self, SCRCPY_dir, FFMPEG_bin, ADB_bin, host, port, SCRCPY_ver, oculus_address):
+        self.bytes_sent = 0
+        self.bytes_rcvd = 0
+        self.images_rcvd = 0
+        self.bytes_to_read = 0
+        self.FFmpeg_info = []
+        self.ACTIVE = True
+        self.LANDSCAPE = True
+        self.FFMPEGREADY = False
+        self.ffoutqueue = Queue()
+        self.SVR_sendFrameMeta = True
+        self.HEADER_SIZE = 12
+        self.RECVSIZE = 0x10000
+        self.SCRCPY_ver=SCRCPY_ver
+        self.host = host
+        self.port = port
+        self.SCRCPY_dir = SCRCPY_dir
+        self.FFMPEG_bin = FFMPEG_bin
+        self.ADB_bin = ADB_bin
+        self.oculus_address = oculus_address
+        
+        if self._init_publisher():
+            if self._init_subscriber():
+                self.start_processing()
+            else:
+                print("Oculus not initialized successfully!")
+        else: print("Oculus not initialized successfully!")
+
+    def stdout_thread(self):
+        while self.ACTIVE:
+            rd = self.ffm.stdout.read(self.bytes_to_read)
+            if rd:
+                self.bytes_rcvd += len(rd)
+                self.images_rcvd += 1
+                self.ffoutqueue.put(rd)
+
+    def stderr_thread(self):
+        while self.ACTIVE:
+            rd = self.ffm.stderr.readline()
+            if rd:
+                self.FFmpeg_info.append(rd.decode("utf-8"))
+
+    def stdin_thread(self):
+        while self.ACTIVE:
+            if self.SVR_sendFrameMeta:
+                header = self.sock.recv(self.HEADER_SIZE)
+                #fd.write(header)
+                pts = int.from_bytes(header[:8],
+                    byteorder='big', signed=False)
+                frm_len = int.from_bytes(header[8:],
+                    byteorder='big', signed=False)
+                
+                data = self.sock.recv(frm_len)
+                #fd.write(data)
+                self.bytes_sent += len(data)
+                self.ffm.stdin.write(data)
+            else:
+                data = self.sock.recv(self.RECVSIZE)
+                self.bytes_sent += len(data)
+                self.ffm.stdin.write(data)
+
+    def _init_publisher(self):
+        try:
+            adb_push = subprocess.Popen(
+                [self.ADB_bin,'-s',self.oculus_address,'push',
+                os.path.join(self.SCRCPY_dir,'scrcpy-server-v1.25'),
+                #  os.path.join(SCRCPY_dir,'Server.java'),
+                '/data/local/tmp/scrcpy-server.jar'],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                cwd=self.SCRCPY_dir)
+            adb_push_comm = ''.join([x.decode("utf-8") for x in adb_push.communicate() if x is not None])
+
+            if "error" in adb_push_comm:
+                print("Is your device/emulator visible to ADB?")
+                raise Exception(adb_push_comm)
+            '''
+            ADB Shell is Blocking, don't wait up for it 
+            Args for the server are as follows:
+            maxSize         (integer, multiple of 8) 0
+            bitRate         (integer)
+            tunnelForward   (optional, bool) use "adb forward" instead of "adb tunnel"
+            crop            (optional, string) "width:height:x:y"
+            sendFrameMeta   (optional, bool) 
+
+            '''
+
+            subprocess.Popen(
+                [self.ADB_bin,'-s',self.oculus_address,'forward',
+                'tcp:'+str(self.port),'localabstract:scrcpy'],
+                cwd=self.SCRCPY_dir).wait()
+            # time.sleep(1)
+
+            subprocess.Popen(
+                [self.ADB_bin,'-s',self.oculus_address,'shell',
+                'CLASSPATH=/data/local/tmp/scrcpy-server.jar',
+                #  'CLASSPATH=/data/local/tmp/Server.java',
+                'app_process','/','com.genymobile.scrcpy.Server',
+                # str(SVR_maxSize),str(SVR_bitRate),
+                # SVR_tunnelForward, SVR_crop, SVR_sendFrameMeta],
+                str(self.SCRCPY_ver),
+                #   "crop=2560:1440:2050:600 ", 
+                "crop=2100:2700:2050:0 ", 
+                  "rotation=22","tunnel_forward=true", "control=false", "cleanup=false"
+                # , "max_size=1660"
+                , "max_size=1280"
+                ])
+                # "rotation-offset=22", "scale=159", "position-x-offset=-520", "position-y-offset=-490"])
+                # cwd=SCRCPY_dir)
+            time.sleep(1)
+        
+
+        except FileNotFoundError:
+            raise FileNotFoundError("Couldn't find ADB at path ADB_bin: "+
+                    str(self.ADB_bin))
+        return True
+
+    def _init_subscriber(self):
+        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        self.sock.connect((self.host, self.port))
+
+        DUMMYBYTE = self.sock.recv(1)
+        #fd.write(DUMMYBYTE)
+        if not len(DUMMYBYTE):
+            raise ConnectionError("Did not recieve Dummy Byte!")
+        else:
+            print("Oculus Connected!")
+
+        # Receive device specs
+        devname = self.sock.recv(64)
+        # fd.write(devname)
+        self.deviceName = devname.decode("utf-8")
+
+        if not len(self.deviceName):
+            raise ConnectionError("Did not recieve Device Name!")
+        print("Device Name: "+self.deviceName)
+        
+        res = self.sock.recv(4)
+        #fd.write(res)
+        self.WIDTH, self.HEIGHT = struct.unpack(">HH", res)
+        print("Oculus WxH: "+str(self.WIDTH)+"x"+str(self.HEIGHT))
+
+        self.bytes_to_read = self.WIDTH * self.HEIGHT * 3
+        
+        return True
+
+    def start_processing(self, connect_attempts=200):
+        # Set up FFmpeg 
+        ffmpegCmd = [self.FFMPEG_bin, '-y',
+                     '-r', '20', '-i', 'pipe:0',
+                     '-vcodec', 'rawvideo',
+                     '-pix_fmt', 'rgb24',
+                     '-f', 'image2pipe',
+                     'pipe:1']
+        try:
+            self.ffm = subprocess.Popen(ffmpegCmd,
+                                        stdin=subprocess.PIPE,
+                                        stdout=subprocess.PIPE,
+                                        stderr=subprocess.PIPE)
+        except FileNotFoundError:
+            raise FileNotFoundError("Couldn't find FFmpeg at path FFMPEG_bin: "+
+                            str(self.FFMPEG_bin))
+        self.ffoutthrd = Thread(target=self.stdout_thread,
+                                args=())
+        self.fferrthrd = Thread(target=self.stderr_thread,
+                                args=())
+        self.ffinthrd = Thread(target=self.stdin_thread,
+                               args=())
+        self.ffoutthrd.daemon = True
+        self.fferrthrd.daemon = True
+        self.ffinthrd.daemon = True
+
+        self.fferrthrd.start()
+        time.sleep(0.25)
+        self.ffinthrd.start()
+        time.sleep(0.25)
+        self.ffoutthrd.start()
+
+        print("Waiting on FFmpeg to detect source")
+        for i in range(connect_attempts):
+            if any(["Output #0, image2pipe" in x for x in self.FFmpeg_info]):
+                self.FFMPEGREADY = True
+                break
+            time.sleep(1)
+            print('still waiting on FFmpeg...')
+        else:
+            print("FFmpeg error?")
+            print(''.join(self.FFmpeg_info))
+            raise Exception("FFmpeg could not open stream")
+        return True
+
+
+    def recv_image(self, most_recent=True):
+        if self.ffoutqueue.empty():
+            return None, None
+        
+        if most_recent:
+            frames_skipped = -1
+            while not self.ffoutqueue.empty():
+                timestamp = time.time()
+                frm = self.ffoutqueue.get()
+                frames_skipped +=1
+        else:
+            frm = self.ffoutqueue.get()
+        
+        frm = np.frombuffer(frm, dtype=np.ubyte)
+        frm = frm.reshape((self.HEIGHT, self.WIDTH, 3))
+        return frm, timestamp
+    
+    def stop(self):
+        print('Closing the subscriber Oculus socket')
+        self.ffm.terminate()
+        self.ffm.kill()  
+        self.ACTIVE = False
+        
+        self.fferrthrd.join()
+        self.ffinthrd.join()
+        self.ffoutthrd.join()
