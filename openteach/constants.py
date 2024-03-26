@@ -1,4 +1,5 @@
 import os.path as path
+import numpy as np
 
 # VR detector 
 # Arm movement
@@ -15,8 +16,8 @@ WRIST_HOME_STATE = {
 OCULUS_NUM_KEYPOINTS = 24
 #VR_THUMB_BOUND_VERTICES = 8
 VR_THUMB_BOUND_VERTICES = 4
-GRIPPER_OPEN=0
-GRIPPER_CLOSE=1
+GRIPPER_OPEN=1 #0
+GRIPPER_CLOSE=0 #1
 
 OCULUS_JOINTS = {
     'metacarpals': [2, 6, 9, 12, 15],
@@ -127,3 +128,28 @@ ROBOT_HOME_POSE_AA = [206.0, -0.0, 475, 3.142, 0.0, 0.0]
 ROBOT_HOME_JS = [0.072358, -0.95536, -0.040176,
                  0.661511, -0.032836, 1.616466, 0.047656]
 
+############################# Stick Teleop #########################################
+# VR_TCP_ADDRESS = "tcp://10.19.205.42:5555"
+VR_TCP_HOST = "10.19.205.42"
+VR_TCP_PORT = 5555
+VR_CONTROLLER_TOPIC = "oculus_controller"
+
+H_R_V = np.array( # this is for vention table 230 arm
+    [[1, 0, 0, 0],
+     [0, 0, -1, 0],
+     [0, -1, 0, 0],
+     [0, 0, 0, 1]]
+)
+H_R_V_star = np.array( # this is for vention table 230 arm
+[[1,0,0,0],
+ [0,0,1,0],
+ [0,1,0,0],
+ [0,0,0,1]]
+)
+
+# Robot workspace position limits.
+x_min, x_max = 206, 550
+y_min, y_max = -365, 260
+z_min, z_max = 100, 550    #232, 550
+ROBOT_WORKSPACE = np.array([[x_min, y_min, z_min], [x_max, y_max, z_max]])
+ROBOT_SERVO_MODE_STEP_LIMITS = np.array([-2, 2])

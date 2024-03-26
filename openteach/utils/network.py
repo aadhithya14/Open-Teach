@@ -32,6 +32,14 @@ def create_request_socket(host, port):
     socket.connect('tcp://{}:{}'.format(host, port))
     return socket
 
+def create_subscriber_socket(host, port, topic):
+    context = zmq.Context()
+    socket = context.socket(zmq.SUB)
+    socket.setsockopt(zmq.CONFLATE, 1)
+    socket.connect('tcp://{}:{}'.format(host, port))
+    socket.subscribe(topic)
+    return socket
+
 # Pub/Sub classes for Keypoints
 class ZMQKeypointPublisher(object):
     def __init__(self, host, port):
