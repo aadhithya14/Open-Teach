@@ -46,7 +46,7 @@ operators:
     # transformed_keypoints_port: ${transformed_position_keypoint_port}
     # arm_resolution_port: ${resolution_button_publish_port} 
     gripper_port: ${gripper_publish_port_right}
-    use_filter: True
+    # use_filter: True
     cartesian_publisher_port: ${cartesian_publisher_port}
     joint_publisher_port: ${joint_publisher_port}
     cartesian_command_publisher_port: ${cartesian_command_publisher_port}
