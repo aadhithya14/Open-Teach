@@ -130,9 +130,9 @@ ROBOT_HOME_JS = [0.072358, -0.95536, -0.040176,
 
 ############################# Stick Teleop #########################################
 # VR_TCP_ADDRESS = "tcp://10.19.205.42:5555"
-VR_TCP_HOST = "10.19.205.42"
+VR_TCP_HOST = "10.19.151.23"
 VR_TCP_PORT = 5555
-VR_CONTROLLER_TOPIC = "oculus_controller"
+VR_CONTROLLER_TOPIC = b"oculus_controller"
 
 H_R_V = np.array( # this is for vention table 230 arm
     [[1, 0, 0, 0],

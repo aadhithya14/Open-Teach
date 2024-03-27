@@ -40,7 +40,7 @@ class Bimanual(RobotWrapper):
         pass
 
     def get_cartesian_state(self):
-        status,current_pos=self.robot.get_position_aa() 
+        status,current_pos=self._controller.robot.get_position_aa() 
         cartesian_state = dict(
             position = np.array(current_pos[0:3], dtype=np.float32).flatten(),
             orientation = np.array(current_pos[3:], dtype=np.float32).flatten(),

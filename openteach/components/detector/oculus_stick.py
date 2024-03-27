@@ -24,7 +24,7 @@ class OculusVRStickDetector(Component):
         # self.raw_keypoint_left_socket= create_pull_socket(host, oculus_left_port)
 
         # Create a subscriber socket
-        self.stick_socket = create_subscriber_socket(VR_TCP_HOST, VR_TCP_PORT, bytes(VR_CONTROLLER_TOPIC, 'utf-8'))
+        self.stick_socket = create_subscriber_socket(VR_TCP_HOST, VR_TCP_PORT, VR_CONTROLLER_TOPIC) #bytes(VR_CONTROLLER_TOPIC, 'utf-8'))
 
         # ZMQ Keypoint publisher
         # self.hand_keypoint_publisher = ZMQKeypointPublisher(
@@ -95,21 +95,25 @@ class OculusVRStickDetector(Component):
     # Function to publish the left/right hand keypoints and button Feedback 
     def stream(self):
 
+        print("oculus stick stream")
         while True:
-            try:
+            # try:
                 self.timer.start_loop()
 
                 # Getting the raw keypoints
                 # raw_right_keypoints = self.raw_keypoint_right_socket.recv()
                 # raw_left_keypoints = self.raw_keypoint_left_socket.recv()
-                button_feedback = self.button_keypoint_socket.recv()
+                # button_feedback = self.button_keypoint_socket.recv()
+                # print("getting oculus message")
                 message = self.stick_socket.recv_string()
-                if message == VR_CONTROLLER_TOPIC:
+                # print("oculus message", message)
+                if message == "oculus_controller": #VR_CONTROLLER_TOPIC:
                     continue
 
                 controller_state = parse_controller_state(message)
 
                 # Publish message
+                # self._publish_controller_state("hello")
                 self._publish_controller_state(controller_state)
 
                 # if button_feedback==b'Low':
@@ -125,8 +129,8 @@ class OculusVRStickDetector(Component):
                 # self._publish_button_data(button_feedback_num)
                 self.timer.end_loop()
 
-            except KeyboardInterrupt:
-                break
+            # except KeyboardInterrupt:
+            #     break
 
         self.controller_state_publisher.stop()
         # self.raw_keypoint_right_socket.close()

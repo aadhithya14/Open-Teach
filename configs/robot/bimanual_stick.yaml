@@ -28,14 +28,14 @@ detector:
 #     transformation_port: ${transformed_position_left_keypoint_port}
 #     moving_average_limit: 1
 
-# Visualizers used to visualize the keypoints stream
-visualizers:
-  -
-    _target_: openteach.components.visualizers.visualizer_2d.Hand2DVisualizer
-    host: ${host_address}
-    transformed_keypoint_port: ${transformed_position_keypoint_port}
-    oculus_feedback_port: ${oculus_graph_port}
-    display_plot: ${visualize_right_2d}
+# # Visualizers used to visualize the keypoints stream
+# visualizers:
+#   -
+#     _target_: openteach.components.visualizers.visualizer_2d.Hand2DVisualizer
+#     host: ${host_address}
+#     transformed_keypoint_port: ${transformed_position_keypoint_port}
+#     oculus_feedback_port: ${oculus_graph_port}
+#     display_plot: ${visualize_right_2d}
 
 # Operators used to retarget the keypoints
 operators:

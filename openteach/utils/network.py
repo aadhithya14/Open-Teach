@@ -35,7 +35,7 @@ def create_request_socket(host, port):
 def create_subscriber_socket(host, port, topic):
     context = zmq.Context()
     socket = context.socket(zmq.SUB)
-    socket.setsockopt(zmq.CONFLATE, 1)
+    # socket.setsockopt(zmq.CONFLATE, 1)
     socket.connect('tcp://{}:{}'.format(host, port))
     socket.subscribe(topic)
     return socket

@@ -116,9 +116,10 @@ class DexArmControl():
                     cartesian_pos, wait=False, relative=False, mvacc=200, speed=50)
 
     def arm_control(self, cartesian_pose):
-        if self.robot.has_error:
-            self.robot.clear()
-            self.robot.set_mode_and_state(1)
+        # if self.robot.has_error:
+        #     self.robot.clear()
+        #     # self.robot.set_mode_and_state(1)
+        #     self.robot.set_mode_and_state(RobotControlMode.SERVO_CONTROL, 0)
         self.robot.set_servo_cartesian_aa(
                     cartesian_pose, wait=False, relative=False, mvacc=200, speed=50)
         

@@ -20,35 +20,6 @@ from numpy.linalg import pinv
 from openteach.constants import H_R_V, H_R_V_star, GRIPPER_OPEN, GRIPPER_CLOSE, SCALE_FACTOR
 
 
-# def robot_pose_aa_to_affine(pose_aa: np.ndarray) -> np.ndarray:
-#     """Converts a robot pose in axis-angle format to an affine matrix.
-#     Args:
-#         pose_aa (list): [x, y, z, ax, ay, az] where (x, y, z) is the position and (ax, ay, az) is the axis-angle rotation.
-#         x, y, z are in mm and ax, ay, az are in radians.
-#     Returns:
-#         np.ndarray: 4x4 affine matrix [[R, t],[0, 1]]
-#     """
-
-#     rotation = R.from_rotvec(pose_aa[3:]).as_matrix()
-#     translation = np.array(pose_aa[:3]) / SCALE_FACTOR
-
-#     return np.block([[rotation, translation[:, np.newaxis]],
-#                      [0, 0, 0, 1]])
-
-
-# def affine_to_robot_pose_aa(affine: np.ndarray) -> np.ndarray:
-#     """Converts an affine matrix to a robot pose in axis-angle format.
-#     Args:
-#         affine (np.ndarray): 4x4 affine matrix [[R, t],[0, 1]]
-#     Returns:
-#         list: [x, y, z, ax, ay, az] where (x, y, z) is the position and (ax, ay, az) is the axis-angle rotation.
-#         x, y, z are in mm and ax, ay, az are in radians.
-#     """
-#     translation = affine[:3, 3] * SCALE_FACTOR
-#     rotation = R.from_matrix(affine[:3, :3]).as_rotvec()
-#     return np.concatenate([translation, rotation])
-
-
 def get_relative_affine(init_affine, current_affine):
     """ Returns the relative affine from the initial affine to the current affine.
         Args:
@@ -103,7 +74,7 @@ class BimanualArmOperator(Operator):
         cartesian_command_publisher_port = None):
 
         self.notify_component_start('Bimanual arm operator')
-
+        
         # Subscribe controller state
         self._controller_state_subscriber = ZMQKeypointSubscriber(
             host=host,
@@ -123,6 +94,9 @@ class BimanualArmOperator(Operator):
         #     port=transformed_keypoints_port,
         #     topic='transformed_hand_coords'
         # )
+        self._transformed_arm_keypoint_subscriber = None
+        self._transformed_hand_keypoint_subscriber = None
+
         # Initalizing the robot controller
         self._robot = Bimanual(ip=RIGHT_ARM_IP)
         self.robot.reset()
@@ -160,11 +134,11 @@ class BimanualArmOperator(Operator):
         self.robot_init_H = self.robot_pose_aa_to_affine(home_pose)
         self._timer = FrequencyTimer(BIMANUAL_VR_FREQ)
 
-        # Use the filter
-        self.use_filter = use_filter
-        if use_filter:
-            robot_init_cart = self._homo2cart(self.robot_init_H)
-            self.comp_filter = Filter(robot_init_cart, comp_ratio=0.8)
+        # # Use the filter
+        # self.use_filter = use_filter
+        # if use_filter:
+        #     robot_init_cart = self._homo2cart(self.robot_init_H)
+        #     self.comp_filter = Filter(robot_init_cart, comp_ratio=0.8)
 
         # Class Variables
         self.resolution_scale =1
@@ -193,20 +167,20 @@ class BimanualArmOperator(Operator):
     def return_real(self):
         return True
 
-    # @property
-    # def transformed_hand_keypoint_subscriber(self):
-    #     return self._transformed_hand_keypoint_subscriber
+    @property
+    def transformed_hand_keypoint_subscriber(self):
+        return self._transformed_hand_keypoint_subscriber
 
-    # @property
-    # def transformed_arm_keypoint_subscriber(self):
-    #     return self._transformed_arm_keypoint_subscriber
+    @property
+    def transformed_arm_keypoint_subscriber(self):
+        return self._transformed_arm_keypoint_subscriber
     
     @property
     def controller_state_subscriber(self):
         return self._controller_state_subscriber
         
     # Convert robot pose in axis-angle format to affine matrix
-    def robot_pose_aa_to_affine(self,pose_aa: np.ndarray) -> np.ndarray:
+    def robot_pose_aa_to_affine(self, pose_aa: np.ndarray) -> np.ndarray:
         """Converts a robot pose in axis-angle format to an affine matrix.
         Args:
             pose_aa (list): [x, y, z, ax, ay, az] where (x, y, z) is the position and (ax, ay, az) is the axis-angle rotation.
@@ -222,7 +196,7 @@ class BimanualArmOperator(Operator):
         return np.block([[rotation, translation[:, np.newaxis]],
                         [0, 0, 0, 1]])
 
-    def affine_to_robot_pose_aa(affine: np.ndarray) -> np.ndarray:
+    def affine_to_robot_pose_aa(self, affine: np.ndarray) -> np.ndarray:
         """Converts an affine matrix to a robot pose in axis-angle format.
         Args:
             affine (np.ndarray): 4x4 affine matrix [[R, t],[0, 1]]
@@ -364,8 +338,15 @@ class BimanualArmOperator(Operator):
     def _apply_retargeted_angles(self, log=False):
        
        # Get the controller state
+        print("Getting controller state")
         self.controller_state = self.controller_state_subscriber.recv_keypoints()
+        print("Got controller state")
         
+        if self.is_first_frame:
+            self.home_pose = self.robot._controller.robot.get_position_aa()[1]
+            self.home_affine = self.robot_pose_aa_to_affine(self.home_pose)
+            self.is_first_frame = False
+
         if self.controller_state.right_a:
             # Pressing A button calibrates first frame and starts teleop for right robot.
             self.start_teleop = True
@@ -374,10 +355,18 @@ class BimanualArmOperator(Operator):
             # Pressing B button stops teleop. And resets calibration frames to None  for right robot.
             self.start_teleop = False
             self.init_affine = None
+            self.home_pose = self.robot._controller.robot.get_position_aa()[1]
+            self.home_affine = self.robot_pose_aa_to_affine(self.home_pose)
+
         
         # Relative transform
+        print(f"start_teleop: {self.start_teleop}")
         if self.start_teleop:
             relative_affine = get_relative_affine(self.init_affine, self.controller_state.right_affine)
+        else:
+            relative_affine = np.zeros((4,4))
+            relative_affine[3, 3] = 1
+        print("Relative_affine:", relative_affine)
 
         # Gripper
         gripper_state = None
@@ -390,20 +379,28 @@ class BimanualArmOperator(Operator):
             self.gripper_correct_state = gripper_state
 
         # Apply the relative transform
+        # home_pose = self.robot._controller.robot.get_position_aa()[1]
+            
         if self.start_teleop:
-            home_translation = self.init_affine[:3, 3]
-            target_translation = home_translation + relative_affine[:3, 3]
+            # home_affine = self.robot_pose_aa_to_affine(home_pose) #   # translation in m
+            home_translation = self.home_affine[:3, 3]
+            home_rotation = self.home_affine[:3, :3]
 
-            home_rotation = self.init_affine[:3, :3]
+            # Target
+            # home_translation = self.init_affine[:3, 3]
+            target_translation = home_translation + relative_affine[:3, 3]
+            # home_rotation = self.init_affine[:3, :3]
             target_rotation = home_rotation @ relative_affine[:3, :3]
 
             target_affine = np.block([[target_rotation, target_translation.reshape(-1,1)], [0, 0, 0, 1]])
 
             # If this target pose is too far from the current pose, move it to the closest point on the boundary.
             target_pose = self.affine_to_robot_pose_aa(target_affine).tolist()
-            current_pose = self.robot.get_position_aa()[1]
+            # current_pose = self.robot.get_position_aa()[1]
+            # delta_translation = np.array(
+            #     target_pose[:3]) - np.array(current_pose[:3])
             delta_translation = np.array(
-                target_pose[:3]) - np.array(current_pose[:3])
+                    target_pose[:3] - np.array(home_translation))
             
             # When using servo commands, the maximum distance the robot can move is 10mm; clip translations accordingly.
             delta_translation = np.clip(delta_translation,
@@ -412,14 +409,16 @@ class BimanualArmOperator(Operator):
 
             # a_min and a_max are the boundaries of the robot's workspace; clip absolute position to these boundaries.
 
-            des_translation = delta_translation + \
-                np.array(current_pose[:3])
+            des_translation = delta_translation + np.array(home_translation)
+                # np.array(current_pose[:3])
             des_translation = np.clip(des_translation,
                                         a_min=ROBOT_WORKSPACE[0],
                                         a_max=ROBOT_WORKSPACE[1]).tolist()
 
             des_rotation = target_pose[3:]
             des_pose = des_translation + des_rotation
+        else:
+            des_pose = self.home_pose
 
         # We save the states here during teleoperation as saving directly at 90Hz seems to be too fast for XArm.
         self.gripper_publisher.pub_keypoints(self.gripper_correct_state,"gripper")
@@ -429,8 +428,9 @@ class BimanualArmOperator(Operator):
         self.joint_publisher.pub_keypoints(joint_position,"joint")
         self.cartesian_command_publisher.pub_keypoints(des_pose,"cartesian")
 
-        if self.start_teleop:
-            self.robot.arm_control(des_pose)
+        print("Desired Pose: ", des_pose)
+        # if self.start_teleop:
+        #     self.robot.arm_control(des_pose)
 
             # ret_code, (joint_pos, joint_vels,
             #             joint_effort) = self.robot.get_joint_states()
@@ -487,7 +487,7 @@ class BimanualArmOperator(Operator):
         #                 [0, 0, 0, 1]])
 
         # H_HT_HI_r=(pinv(H_R_V)@H_HT_HI@H_R_V)[:3,:3]
-        # H_HT_HI_t=(pinv(H_T_V)@H_HT_HI@H_T_V)[:3,3]
+        # H_HT_HI_t=(pinv(H_T_V)@H_HT_HI@H_T_V)[:3,3]_is_first_frame
         
         # #Calculate relative affine matrix 
         # relative_affine = np.block(
