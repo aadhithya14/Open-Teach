@@ -2,12 +2,12 @@ defaults:
   - _self_
   - network
   - camera
-  - robot: xela_hand_franka
+  - robot: bimanual_stick
   - override hydra/hydra_logging: disabled  
   - override hydra/job_logging: disabled  
 
  
-use_sensor: true
+use_sensor: false
 
 hydra:  
   output_subdir: null  

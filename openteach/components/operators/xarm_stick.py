@@ -6,7 +6,7 @@ from openteach.utils.timer import FrequencyTimer
 from openteach.utils.network import ZMQKeypointSubscriber , ZMQKeypointPublisher
 from openteach.utils.vectorops import *
 from openteach.utils.files import *
-from openteach.robot.bimanual_stick import Bimanual
+from openteach.robot.xarm_stick import XArm
 from scipy.spatial.transform import Rotation, Slerp
 from .operator import Operator
 from scipy.spatial.transform import Rotation as R
@@ -55,7 +55,7 @@ class Filter:
         return np.concatenate([self.pos_state, self.ori_state])
 
 
-class BimanualArmOperator(Operator):
+class XArmOperator(Operator):
     def __init__(
         self,
         host, 
@@ -65,7 +65,7 @@ class BimanualArmOperator(Operator):
         joint_publisher_port = None,
         cartesian_command_publisher_port = None):
 
-        self.notify_component_start('Bimanual arm operator')
+        self.notify_component_start('xArm stick operator')
         
         # Subscribe controller state
         self._controller_state_subscriber = ZMQKeypointSubscriber(
@@ -79,7 +79,7 @@ class BimanualArmOperator(Operator):
         self._transformed_hand_keypoint_subscriber = None
 
         # Initalizing the robot controller
-        self._robot = Bimanual(ip=RIGHT_ARM_IP)
+        self._robot = XArm(ip=RIGHT_ARM_IP)
         self.robot.reset()
 
         # Gripper and cartesian publisher

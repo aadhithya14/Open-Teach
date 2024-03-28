@@ -4,7 +4,7 @@ from openteach.utils.network import ZMQKeypointSubscriber
 import numpy as np
 import time
 
-class Bimanual(RobotWrapper):
+class XArm(RobotWrapper):
     def __init__(self, ip,record_type=None):
         self._controller = DexArmControl(ip=ip,record_type=record_type)
         self._data_frequency = 90
@@ -23,7 +23,7 @@ class Bimanual(RobotWrapper):
 
     @property
     def name(self):
-        return 'right_xarm'
+        return 'xarm'
 
     @property
     def data_frequency(self):

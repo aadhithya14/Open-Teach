@@ -1,4 +1,4 @@
-robot_name: bimanual
+robot_name: xarm
 
 # Detector used to teleoperate the robot
 detector:
@@ -9,7 +9,7 @@ detector:
 # Operators used to retarget the keypoints
 operators:
   - 
-    _target_: openteach.components.operators.bimanual_stick.BimanualArmOperator
+    _target_: openteach.components.operators.xarm_stick.XArmOperator
     host: ${host_address}
     controller_state_port: ${transformed_position_keypoint_port}
     gripper_port: ${gripper_publish_port_right}
@@ -20,7 +20,7 @@ operators:
 # List of controller classes used
 controllers: 
   -
-    _target_: openteach.robot.bimanual_stick.Bimanual
+    _target_: openteach.robot.xarm_stick.XArm
     ip: ${right_xarm_ip}
     # record: False
 
