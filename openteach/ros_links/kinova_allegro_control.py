@@ -219,7 +219,7 @@ class DexArmControl():
         self.kinova.joint_movement(kinova_angles, False)
 
     def move_arm_cartesian(self, kinova_cartesian_values):
-        self.kinova.cartesian_movement(kinova_cartesian_values, False)
+        self.kinova.cartesian_movement(kinova_cartesian_values, False, is_quaternion=True)
 
     def move_arm_cartesian_velocity(self, cartesian_velocity_values, duration):
         self.kinova.publish_cartesian_velocity(cartesian_velocity_values, duration)
