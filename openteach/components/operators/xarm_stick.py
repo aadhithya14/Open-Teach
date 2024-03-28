@@ -79,7 +79,7 @@ class XArmOperator(Operator):
         self._transformed_hand_keypoint_subscriber = None
 
         # Initalizing the robot controller
-        self._robot = XArm(ip=RIGHT_ARM_IP)
+        self._robot = XArm(ip=RIGHT_ARM_IP, host_address=host)
         self.robot.reset()
 
         # Gripper and cartesian publisher

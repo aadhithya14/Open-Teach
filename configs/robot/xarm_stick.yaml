@@ -22,6 +22,7 @@ controllers:
   -
     _target_: openteach.robot.xarm_stick.XArm
     ip: ${right_xarm_ip}
+    host_address: ${host_address}
     # record: False
 
 # Information to be recorded for the robot 

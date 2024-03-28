@@ -5,8 +5,9 @@ import numpy as np
 import time
 
 class XArm(RobotWrapper):
-    def __init__(self, ip,record_type=None):
+    def __init__(self, ip, host_address, record_type=None):
         self._controller = DexArmControl(ip=ip,record_type=record_type)
+        self.host_address = host_address
         self._data_frequency = 90
 
     @property
@@ -82,7 +83,7 @@ class XArm(RobotWrapper):
 
     def get_gripper_state_from_socket(self):
         self._gripper_state_subscriber = ZMQKeypointSubscriber(
-                host = '10.19.216.156', 
+                host = self.host_address,
                 port = 8108,
                 topic = 'gripper'
             )
@@ -95,7 +96,7 @@ class XArm(RobotWrapper):
         
     def get_cartesian_state_from_socket(self):
         self._cartesian_state_subscriber = ZMQKeypointSubscriber(
-                host = '10.19.216.156', 
+                host = self.host_address,
                 port = 8118,
                 topic = 'cartesian'
             )
@@ -108,7 +109,7 @@ class XArm(RobotWrapper):
     
     def get_joint_state_from_socket(self):
         self._joint_state_subscriber = ZMQKeypointSubscriber(
-                host = '10.19.216.156', 
+                host = self.host_address,
                 port = 8119,
                 topic = 'joint'
             )
@@ -122,7 +123,7 @@ class XArm(RobotWrapper):
     
     def get_cartesian_commanded_position(self):
         self.cartesian_state_subscriber = ZMQKeypointSubscriber(
-                host = '10.19.216.156', 
+                host = self.host_address,
                 port = 8120,
                 topic = 'cartesian'
             )
