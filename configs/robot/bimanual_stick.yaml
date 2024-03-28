@@ -22,7 +22,7 @@ controllers:
   -
     _target_: openteach.robot.bimanual_stick.Bimanual
     ip: ${right_xarm_ip}
-    record: False
+    # record: False
 
 # Information to be recorded for the robot 
 recorded_data:
