@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import zmq
+import time
 
 from mpl_toolkits.mplot3d import Axes3D
 from tqdm import tqdm
@@ -338,11 +339,11 @@ class BimanualArmOperator(Operator):
     def _apply_retargeted_angles(self, log=False):
        
        # Get the controller state
-        print("Getting controller state")
         self.controller_state = self.controller_state_subscriber.recv_keypoints()
-        print("Got controller state")
         
         if self.is_first_frame:
+            self.robot.home()
+            time.sleep(2)
             self.home_pose = self.robot._controller.robot.get_position_aa()[1]
             self.home_affine = self.robot_pose_aa_to_affine(self.home_pose)
             self.is_first_frame = False
@@ -360,13 +361,11 @@ class BimanualArmOperator(Operator):
 
         
         # Relative transform
-        print(f"start_teleop: {self.start_teleop}")
         if self.start_teleop:
             relative_affine = get_relative_affine(self.init_affine, self.controller_state.right_affine)
         else:
             relative_affine = np.zeros((4,4))
             relative_affine[3, 3] = 1
-        print("Relative_affine:", relative_affine)
 
         # Gripper
         gripper_state = None
@@ -391,16 +390,17 @@ class BimanualArmOperator(Operator):
             target_translation = home_translation + relative_affine[:3, 3]
             # home_rotation = self.init_affine[:3, :3]
             target_rotation = home_rotation @ relative_affine[:3, :3]
-
+            
             target_affine = np.block([[target_rotation, target_translation.reshape(-1,1)], [0, 0, 0, 1]])
 
             # If this target pose is too far from the current pose, move it to the closest point on the boundary.
             target_pose = self.affine_to_robot_pose_aa(target_affine).tolist()
+            current_pose = self.robot._controller.robot.get_position_aa()[1]
             # current_pose = self.robot.get_position_aa()[1]
             # delta_translation = np.array(
             #     target_pose[:3]) - np.array(current_pose[:3])
             delta_translation = np.array(
-                    target_pose[:3] - np.array(home_translation))
+                    target_pose[:3] - np.array(current_pose[:3]))
             
             # When using servo commands, the maximum distance the robot can move is 10mm; clip translations accordingly.
             delta_translation = np.clip(delta_translation,
@@ -409,8 +409,7 @@ class BimanualArmOperator(Operator):
 
             # a_min and a_max are the boundaries of the robot's workspace; clip absolute position to these boundaries.
 
-            des_translation = delta_translation + np.array(home_translation)
-                # np.array(current_pose[:3])
+            des_translation = delta_translation + np.array(current_pose[:3])
             des_translation = np.clip(des_translation,
                                         a_min=ROBOT_WORKSPACE[0],
                                         a_max=ROBOT_WORKSPACE[1]).tolist()
@@ -428,9 +427,8 @@ class BimanualArmOperator(Operator):
         self.joint_publisher.pub_keypoints(joint_position,"joint")
         self.cartesian_command_publisher.pub_keypoints(des_pose,"cartesian")
 
-        print("Desired Pose: ", des_pose)
-        # if self.start_teleop:
-        #     self.robot.arm_control(des_pose)
+        if self.start_teleop:
+            self.robot.arm_control(des_pose)
 
             # ret_code, (joint_pos, joint_vels,
             #             joint_effort) = self.robot.get_joint_states()
@@ -475,7 +473,7 @@ class BimanualArmOperator(Operator):
         # # Transformation from initial hand frame to moving hand frame
         # H_HT_HI = np.linalg.pinv(H_HI_HH) @ H_HT_HH
         
-        # # Here there are two matrices because the rotation is asymmetric and we imagine we are holding the endeffector and moving the robot.
+        # # Here there are two matrices because the rotation is asymmetric and we imagine waitwe are holding the endeffector and moving the robot.
         # H_R_V= np.array([[0 , 0, 1, 0], 
         #                 [0 , 1, 0, 0],
         #                 [-1, 0, 0, 0],

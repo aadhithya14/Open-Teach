@@ -1,4 +1,4 @@
-from openteach.constants import VR_FREQ,  ARM_LOW_RESOLUTION, ARM_HIGH_RESOLUTION, ARM_TELEOP_CONT, ARM_TELEOP_STOP , GRIPPER_CLOSE, GRIPPER_OPEN, VR_TCP_HOST, VR_TCP_PORT, VR_CONTROLLER_TOPIC
+from openteach.constants import VR_FREQ, BIMANUAL_VR_FREQ, ARM_LOW_RESOLUTION, ARM_HIGH_RESOLUTION, ARM_TELEOP_CONT, ARM_TELEOP_STOP , GRIPPER_CLOSE, GRIPPER_OPEN, VR_TCP_HOST, VR_TCP_PORT, VR_CONTROLLER_TOPIC
 from openteach.components import Component
 from openteach.utils.timer import FrequencyTimer
 from openteach.utils.network import create_pull_socket, create_subscriber_socket, ZMQKeypointPublisher
@@ -41,7 +41,7 @@ class OculusVRStickDetector(Component):
             host = host,
             port = controller_state_pub_port
         )
-        self.timer = FrequencyTimer(VR_FREQ)
+        self.timer = FrequencyTimer(BIMANUAL_VR_FREQ) #VR_FREQ)
 
 
     # # Function to process the data token received from the VR
