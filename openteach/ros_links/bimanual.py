@@ -37,11 +37,11 @@ class Robot(XArmAPI):
         # Clean error
         self.clear()
         print("SLow reset working")
-        # self.set_mode_and_state(RobotControlMode.CARTESIAN_CONTROL, 0)
-        # status = self.set_servo_angle(angle=ROBOT_HOME_JS, wait=True, is_radian=True, speed=math.radians(50))
-        self.set_mode_and_state(RobotControlMode.SERVO_CONTROL, 0)
-        status = self.set_servo_cartesian_aa(
-                    ROBOT_HOME_POSE_AA, wait=False, relative=False, mvacc=200, speed=50)
+        self.set_mode_and_state(RobotControlMode.CARTESIAN_CONTROL, 0)
+        status = self.set_servo_angle(angle=ROBOT_HOME_JS, wait=True, is_radian=True, speed=math.radians(50))
+        # self.set_mode_and_state(RobotControlMode.SERVO_CONTROL, 0)
+        # status = self.set_servo_cartesian_aa(
+        #             ROBOT_HOME_POSE_AA, wait=False, relative=False, mvacc=200, speed=50)
         assert status == 0, "Failed to set robot at home joint position"
         self.set_mode_and_state(RobotControlMode.SERVO_CONTROL, 0)
         self.set_gripper_position(800.0, wait=True)
@@ -119,10 +119,10 @@ class DexArmControl():
                     cartesian_pos, wait=False, relative=False, mvacc=200, speed=50)
 
     def arm_control(self, cartesian_pose):
-        # if self.robot.has_error:
-        #     self.robot.clear()
-        #     # self.robot.set_mode_and_state(1)
-        #     self.robot.set_mode_and_state(RobotControlMode.SERVO_CONTROL, 0)
+        if self.robot.has_error:
+            self.robot.clear()
+            # self.robot.set_mode_and_state(1)
+            self.robot.set_mode_and_state(RobotControlMode.SERVO_CONTROL, 0)
         self.robot.set_servo_cartesian_aa(
                     cartesian_pose, wait=False, relative=False, mvacc=200, speed=50)
         

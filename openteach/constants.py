@@ -94,7 +94,7 @@ XELA_PLOT_SAVE_PATH = path.join(CALIBRATION_FILES_PATH, 'xela_plot.png')
 
 
 # Data recording parameters - Images are recorded at CAM_FPS rate
-IMAGE_RECORD_RESOLUTION = (1280, 720) 
+IMAGE_RECORD_RESOLUTION = (640, 480) #(1280, 720) 
 IMAGE_RECORD_RESOLUTION_SIM = (480, 480)
 DEPTH_RECORD_FPS = 30
 ALLEGRO_SAMPLE_OFFSET = 10 # For sampling states
