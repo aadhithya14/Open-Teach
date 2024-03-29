@@ -60,7 +60,7 @@ class DeployServer(Component):
                         cartesian_coords = robot_action_dict[robot]['cartesian']
 
                         # gripper
-                        if gripper_action > 0.5:
+                        if gripper_action > 400: # 0.5:
                             self._robots[robot].set_gripper_state(800)
                         else:
                             self._robots[robot].set_gripper_state(0)
@@ -144,26 +144,28 @@ class DeployServer(Component):
         self.notify_component_start('robot deployer')
         # self.visualizer_process.start()
         while True:
-            try:
+            # try:
                 print('\nListening')
                 self.timer.start_loop()
-                robot_action = pickle.loads(self.deployment_socket.recv())
+                # robot_action = pickle.loads(self.deployment_socket.recv())
+                robot_action = self.deployment_socket.recv()
 
-                if robot_action == 'get_state':
+                if robot_action == b'get_state':
                     print('Requested for robot state information.')
                     self._send_robot_state()
                     continue
 
-                if robot_action == 'get_sensor_state':
+                if robot_action == b'get_sensor_state':
                     print('Requested for sensor information.')
                     self._send_sensor_state()
                     continue
 
-                if robot_action == 'reset':
+                if robot_action == b'reset':
                     print('Resetting the robot.')
                     self._reset()
                     continue
 
+                robot_action = pickle.loads(robot_action)
                 success = self._perform_robot_action(robot_action)
                 print('success: {}'.format(success))
                 # More accurate sleep
@@ -172,13 +174,14 @@ class DeployServer(Component):
 
                 if success:
                     print('Before sending the states')
-                    self._send_both_state()
+                    # self._send_both_state()
+                    self._send_robot_state()
                     print('Applied robot action.')
                 else:
                     self.deployment_socket.send("Command failed!")
-            except:
-                print('Illegal values passed. Terminating session.')
-                break
+            # except:
+            #     print('Illegal values passed. Terminating session.')
+            #     break
 
         # self.visualizer_process.join()
         print('Closing robot deployer component.')
