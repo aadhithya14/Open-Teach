@@ -34,7 +34,7 @@ for i, data_point in enumerate(dirs):
         cam_dir = data_point / f"cam_{idx}_rgb_images"
         # img_paths = sorted(cam_dir.iterdir())
         imgs = [cv2.resize(cv2.imread(str(cam_dir / 'frame_{:05d}.png'.format(num) )), img_size) for num in image_indices]
-        observation[f"cam_{idx}"] = imgs
+        observation[f"cam{idx}"] = imgs
     # robot state
     indices = pkl.load(open(data_point / "xarm_indices.pkl", "rb"))
     cartesian_states = h5.File(data_point / "xarm_cartesian_states.h5", "r")["cartesian_positions"][()]
