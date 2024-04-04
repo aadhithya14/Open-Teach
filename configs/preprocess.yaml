@@ -1,7 +1,7 @@
 
 preprocessor_module:
   _target_: openteach.preprocess.Preprocessor
-  data_path: extracted_data/test/ # Path to the extracted data
+  data_path: extracted_data/pick_can/ # Path to the extracted data
   modules:
     robot: ${robot_cfg}
     image: ${image_cfg} # - this is only for tactile training
@@ -15,7 +15,7 @@ robot_cfg:
   robot_names: ['xarm'] #['allegro', 'franka']
   robot_thresholds: # If robot thresholds are set to 0 then it will basically not subsample
     # hand: 0.005
-    arm: 0.01 # corresponding thresholds to the robot_names
+    arm: 0.005 #0.01 # corresponding thresholds to the robot_names
   # dump_fingertips: true
 
 image_cfg:

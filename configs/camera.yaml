@@ -8,7 +8,11 @@ robot_cam_serial_numbers:
   # - '141722071999' # close to the robot
   # - '138422075648' # on top left corner
   # - '023422073116'
+  # - '023322062082'
+  # - '239122072217'
+  - '233522071078'
   - '023322062082'
+  - '239122072217'
 
 cam_configs:
   width: 640 #1280
@@ -18,7 +22,7 @@ cam_configs:
   rotation_angle: 0
 
 oculus_cam: 0 # First camera
-num_cams: 1
+num_cams: 3
 
 hydra:  
   output_subdir: null  

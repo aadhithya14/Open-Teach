@@ -5,7 +5,7 @@ import cv2
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
 
-DATASET_PATH = Path("extracted_data/put_toast_in_oven")
+DATASET_PATH = Path("extracted_data/pick_can")
 num_cams = 1
 img_size = (128, 128)
 
@@ -33,7 +33,16 @@ for i, data_point in enumerate(dirs):
     for idx in range(num_cams):
         cam_dir = data_point / f"cam_{idx}_rgb_images"
         # img_paths = sorted(cam_dir.iterdir())
-        imgs = [cv2.resize(cv2.imread(str(cam_dir / 'frame_{:05d}.png'.format(num) )), img_size) for num in image_indices]
+        # imgs = [cv2.resize(cv2.imread(str(cam_dir / 'frame_{:05d}.png'.format(num) )), img_size) for num in image_indices]
+        imgs = []
+        for num in image_indices:
+            image_path = cam_dir / f"frame_{num:05d}.png"
+            if not image_path.exists():
+                print(f"Image {image_path} does not exist")
+                continue
+            img = cv2.imread(str(image_path))
+            img = cv2.resize(img, img_size)
+            imgs.append(img)
         observation[f"cam{idx}"] = imgs
     # robot state
     indices = pkl.load(open(data_point / "xarm_indices.pkl", "rb"))

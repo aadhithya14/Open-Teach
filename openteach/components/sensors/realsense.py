@@ -7,7 +7,8 @@ from openteach.utils.network import ZMQCameraPublisher, ZMQCompressedImageTransm
 from openteach.constants import *
 
 class RealsenseCamera(Component):
-    def __init__(self, stream_configs, cam_serial_num, cam_id, cam_configs, stream_oculus = False):
+    def __init__(self, stream_configs, cam_serial_num, cam_id, cam_configs, stream_oculus = False,
+                 depth=False):
         # Disabling scientific notations
         np.set_printoptions(suppress=True)
         self.cam_id = cam_id
@@ -15,6 +16,7 @@ class RealsenseCamera(Component):
         self._cam_serial_num = cam_serial_num
         self._stream_configs = stream_configs
         self._stream_oculus = stream_oculus
+        self._depth = depth
 
         # Different publishers to avoid overload
         self.rgb_publisher = ZMQCameraPublisher(
@@ -51,21 +53,24 @@ class RealsenseCamera(Component):
             rs.format.bgr8, 
             self.cam_configs.fps
         )
-        config.enable_stream(
-            rs.stream.depth, 
-            self.cam_configs.width, 
-            self.cam_configs.height, 
-            rs.format.z16, 
-            self.cam_configs.fps
-        )
+        if self._depth:
+            config.enable_stream(
+                rs.stream.depth, 
+                self.cam_configs.width, 
+                self.cam_configs.height, 
+                rs.format.z16, 
+                self.cam_configs.fps
+            )
 
         # Starting the pipeline
         cfg = self.pipeline.start(config)
         device = cfg.get_device()
 
-        # Setting the depth mode to high accuracy mode
-        depth_sensor = device.first_depth_sensor()
-        depth_sensor.set_option(rs.option.visual_preset, self.cam_configs.processing_preset)
+        if self._depth:
+            # Setting the depth mode to high accuracy mode
+            depth_sensor = device.first_depth_sensor()
+            depth_sensor.set_option(rs.option.visual_preset, self.cam_configs.processing_preset)
+        
         self.realsense = self.pipeline
 
         # Obtaining the color intrinsics matrix for aligning the color and depth images
@@ -89,11 +94,15 @@ class RealsenseCamera(Component):
             frames = self.realsense.wait_for_frames()
             aligned_frames = self.align.process(frames)
 
-            depth_frame = aligned_frames.get_depth_frame()
+            if self._depth:
+                depth_frame = aligned_frames.get_depth_frame()
             color_frame = aligned_frames.get_color_frame()
 
             # Getting the images from the frames
-            depth_image = np.asanyarray(depth_frame.get_data())
+            if self._depth:
+                depth_image = np.asanyarray(depth_frame.get_data())
+            else:
+                depth_image = np.zeros((self.cam_configs.height, self.cam_configs.width), dtype=np.uint16)
             color_image = np.asanyarray(color_frame.get_data())
 
         return color_image, depth_image, frames.get_timestamp()
@@ -113,7 +122,8 @@ class RealsenseCamera(Component):
                 color_image, depth_image, timestamp = self.get_rgb_depth_images()
 
                 color_image = rotate_image(color_image, self.cam_configs.rotation_angle)
-                depth_image = rotate_image(depth_image, self.cam_configs.rotation_angle)
+                if self._depth:
+                    depth_image = rotate_image(depth_image, self.cam_configs.rotation_angle)
 
                 # Publishing the rgb images
                 self.rgb_publisher.pub_rgb_image(color_image, timestamp)
