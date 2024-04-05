@@ -5,13 +5,17 @@ import cv2
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
 
-DATASET_PATH = Path("extracted_data/pick_can")
-num_cams = 1
+DATASET_PATH = Path("extracted_data/pick_can_test")
+# num_cams = 3
+camera_indices = [0,2]
 img_size = (128, 128)
 
 # Get task name sentence
-task_name = DATASET_PATH.name.split("/")[-1]
-task_name = task_name.replace("_", " ")
+# task_name = DATASET_PATH.name.split("/")[-1]
+# task_name = task_name.replace("_", " ")
+label_path = DATASET_PATH / "label.txt"
+task_name = label_path.read_text().strip()
+print(f"Task name: {task_name}")
 lang_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 task_emb = lang_model.encode(task_name)
 
@@ -30,7 +34,9 @@ for i, data_point in enumerate(dirs):
     observation = {}
     # images
     image_indices = np.array(pkl.load(open(data_point / "image_indices.pkl", "rb")))[:, 1]
-    for idx in range(num_cams):
+    incomplete = False
+    # for idx in range(num_cams):
+    for idx in camera_indices:
         cam_dir = data_point / f"cam_{idx}_rgb_images"
         # img_paths = sorted(cam_dir.iterdir())
         # imgs = [cv2.resize(cv2.imread(str(cam_dir / 'frame_{:05d}.png'.format(num) )), img_size) for num in image_indices]
@@ -39,11 +45,17 @@ for i, data_point in enumerate(dirs):
             image_path = cam_dir / f"frame_{num:05d}.png"
             if not image_path.exists():
                 print(f"Image {image_path} does not exist")
-                continue
+                incomplete = True
+                break
             img = cv2.imread(str(image_path))
             img = cv2.resize(img, img_size)
             imgs.append(img)
-        observation[f"cam{idx}"] = imgs
+        if incomplete:
+            break
+        observation[f"pixels{idx}"] = imgs
+    if incomplete:
+        print(f"Data point {data_point} is incomplete")
+        continue
     # robot state
     indices = pkl.load(open(data_point / "xarm_indices.pkl", "rb"))
     cartesian_states = h5.File(data_point / "xarm_cartesian_states.h5", "r")["cartesian_positions"][()]
