@@ -277,7 +277,6 @@ class Collector(ProcessInstantiator):
         if self.configs.sim_env is not True:
             print("Camera recorder starting")
             for cam_idx in range(len(self.configs.robot_cam_serial_numbers)):
-                #print(cam_idx)
                 self.processes.append(Process(
                     target = self._start_rgb_component,
                     args = (cam_idx, )
@@ -285,6 +284,15 @@ class Collector(ProcessInstantiator):
 
                 self.processes.append(Process(
                     target = self._start_depth_component,
+                    args = (cam_idx, )
+                ))
+
+            import yaml
+            with open('configs/fisheyecamera.yaml') as file:
+                fish_eye_cam_configs = yaml.load(file, Loader=yaml.FullLoader)
+            for cam_idx in range(len(fish_eye_cam_configs['fisheye_cam_numbers'])):
+                self.processes.append(Process(
+                    target = self._start_fish_eye_component,
                     args = (cam_idx, )
                 ))
         else:

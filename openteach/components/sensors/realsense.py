@@ -96,6 +96,9 @@ class RealsenseCamera(Component):
             depth_image = np.asanyarray(depth_frame.get_data())
             color_image = np.asanyarray(color_frame.get_data())
 
+            depth_image = depth_image.copy()
+            color_image = color_image.copy()
+
         return color_image, depth_image, frames.get_timestamp()
 
     def stream(self):

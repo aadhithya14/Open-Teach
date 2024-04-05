@@ -44,6 +44,7 @@ class FishEyeCamera(Component):
         
         print("Cam Id is ", self.cam_id)
         self.cap = cv2.VideoCapture(self.cam_id)
+        # self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
        
        
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 680)
