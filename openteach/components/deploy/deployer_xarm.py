@@ -60,7 +60,7 @@ class DeployServer(Component):
                         cartesian_coords = robot_action_dict[robot]['cartesian']
 
                         # gripper
-                        if gripper_action > 400: # 0.5:
+                        if gripper_action > 0.4: #400: # 0.5:
                             self._robots[robot].set_gripper_state(800)
                         else:
                             self._robots[robot].set_gripper_state(0)
@@ -166,6 +166,7 @@ class DeployServer(Component):
                     continue
 
                 robot_action = pickle.loads(robot_action)
+                print("Received robot action: {}".format(robot_action))
                 success = self._perform_robot_action(robot_action)
                 print('success: {}'.format(success))
                 # More accurate sleep

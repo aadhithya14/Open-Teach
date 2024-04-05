@@ -6,7 +6,7 @@ preprocessor_module:
     robot: ${robot_cfg}
     image: ${image_cfg} # - this is only for tactile training
     # tactile: ${tactile_cfg}
-  dump_data_indices: false
+  dump_data_indices: false #true
   process_single_demo: false
 
 robot_cfg:
@@ -15,7 +15,7 @@ robot_cfg:
   robot_names: ['xarm'] #['allegro', 'franka']
   robot_thresholds: # If robot thresholds are set to 0 then it will basically not subsample
     # hand: 0.005
-    arm: 0.01 # corresponding thresholds to the robot_names
+    arm: 0.1 #0.01 # corresponding thresholds to the robot_names
   # dump_fingertips: true
 
 image_cfg:

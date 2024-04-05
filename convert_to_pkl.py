@@ -66,6 +66,11 @@ for i, data_point in enumerate(dirs):
     cartesian_states = np.array(cartesian_states)[indices[:, 1]]
     gripper_states = np.array(gripper_states)[indices[:, 1]]
     joint_states = np.array(joint_states)[indices[:, 1]]
+    # Convert roll-pitch-yaw to sin-cos
+    cartesian_pos = cartesian_states[:, :3]
+    cartesian_ori = cartesian_states[:, 3:]
+    cartesian_ori = np.concatenate([np.sin(cartesian_ori), np.cos(cartesian_ori)], axis=1)
+    cartesian_states = np.concatenate([cartesian_pos, cartesian_ori], axis=1)
     # save in observation
     observation["cartesian_states"] = cartesian_states
     observation["gripper_states"] = gripper_states
