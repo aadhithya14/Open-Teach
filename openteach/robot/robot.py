@@ -48,14 +48,14 @@ class RobotWrapper(ABC):
     def move_coords(self, input_coords):
         pass
 
-    @abstractmethod
-    def reset(self):
-        pass
+    # @abstractmethod
+    # def reset(self):
+    #     pass
 
-    @abstractmethod
-    def arm_control(self):
-        pass
+    # @abstractmethod
+    # def arm_control(self):
+    #     pass
 
-    @abstractmethod
-    def set_gripper_state(self):
-        pass
+    # @abstractmethod
+    # def set_gripper_state(self):
+    #     pass
