@@ -10,7 +10,7 @@ import cv2
 import time
 import multiprocessing as mp
 
-class FishEyeCamera(Component):
+class EmeetCamera(Component):
     def __init__(self,cam_index,stream_configs, stream_oculus = False):
         # Disabling scientific notations
         np.set_printoptions(suppress=True)
@@ -38,13 +38,12 @@ class FishEyeCamera(Component):
         self.timer = FrequencyTimer(CAM_FPS) # 30 fps
 
         # Starting the Fisheye pipeline
-        self._start_fisheye()
+        self._start_emeet()
 
-    def _start_fisheye(self):
+    def _start_emeet(self):
         
         print("Cam Id is ", self.cam_id)
         self.cap = cv2.VideoCapture(self.cam_id)
-        # self.cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG'))
        
        
         self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 680)
