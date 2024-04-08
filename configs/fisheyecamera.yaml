@@ -5,9 +5,8 @@ defaults:
   - override hydra/job_logging: disabled 
 
 fisheye_cam_numbers:
-  - 18
-  - 20
-
+  - 22
+  
 cam_configs:
   width: 640
   height: 480

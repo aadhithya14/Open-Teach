@@ -15,8 +15,8 @@ robot_cam_serial_numbers:
   - '233522071078'
 
 cam_configs:
-  width: 1920 #640 
-  height: 1080 #480 
+  width: 640 
+  height: 480 
   fps: 30
   processing_preset: 1 # High accuracy mode
   rotation_angle: 0
