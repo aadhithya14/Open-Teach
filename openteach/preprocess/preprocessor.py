@@ -85,8 +85,9 @@ class Preprocessor:
             module_ts_diff = 1e3
             cand_metric_ts = metric_timestamp
             for key, module in self.modules.items():
-                next_ts = module.get_next_timestamp()
 
+                next_ts = module.get_next_timestamp()
+                
                 if next_ts != -1 and next_ts - metric_timestamp < module_ts_diff:
                     module_ts_diff = next_ts - metric_timestamp 
                     cand_metric_ts = next_ts

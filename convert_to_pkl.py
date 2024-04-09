@@ -7,7 +7,7 @@ from sentence_transformers import SentenceTransformer
 
 DATASET_PATH = Path("extracted_data/pick_can_test")
 # num_cams = 3
-camera_indices = [0,2]
+camera_indices = [1,3]
 img_size = (128, 128)
 
 # Get task name sentence

@@ -276,6 +276,7 @@ class Collector(ProcessInstantiator):
     def _init_camera_recorders(self):
         if self.configs.sim_env is not True:
             print("Camera recorder starting")
+            cam_idx = 0
             for cam_idx in range(len(self.configs.robot_cam_serial_numbers)):
                 self.processes.append(Process(
                     target = self._start_rgb_component,
@@ -290,10 +291,11 @@ class Collector(ProcessInstantiator):
             import yaml
             with open('configs/fisheyecamera.yaml') as file:
                 fish_eye_cam_configs = yaml.load(file, Loader=yaml.FullLoader)
-            for cam_idx in range(len(fish_eye_cam_configs['fisheye_cam_numbers'])):
+            for fisheye_cam_idx in range(len(fish_eye_cam_configs['fisheye_cam_numbers'])):
                 self.processes.append(Process(
                     target = self._start_fish_eye_component,
-                    args = (cam_idx, )
+                    # args = (cam_idx + 1 + fisheye_cam_idx, )
+                    args = (cam_idx, fisheye_cam_idx, )
                 ))
         else:
           
@@ -338,12 +340,13 @@ class Collector(ProcessInstantiator):
             ))
 
     #Function to start the fish eye recorders
-    def _start_fish_eye_component(self, cam_idx):
+    def _start_fish_eye_component(self, cam_idx, fish_eye_cam_idx):
         component = FishEyeImageRecorder(
             host = self.configs.host_address,
-            image_stream_port = self.configs.fish_eye_cam_port_offset + cam_idx,
+            image_stream_port = self.configs.fish_eye_cam_port_offset + fish_eye_cam_idx,
             storage_path = self._storage_path,
-            filename = 'cam_{}_fish_eye_video'.format(cam_idx)
+            # filename = 'cam_{}_rgb_video'.format(cam_idx)
+            filename = 'cam_{}_rgb_video'.format(cam_idx + 1 + fish_eye_cam_idx)
         )
         component.stream()
 

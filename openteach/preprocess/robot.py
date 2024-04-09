@@ -211,7 +211,7 @@ class RobotPreprocessor(PreprocessorModule):
             curr_pos = self.data['arm']['positions'][i]
             curr_pos_dist, curr_angle_diff = get_arm_distance(old_pos, curr_pos)
             if (not limit_timestamp is None and self.data['arm']['timestamps'][i] > limit_timestamp) or \
-                curr_pos_dist > threshold_step_size or curr_angle_diff > 10:
+                curr_pos_dist > threshold_step_size or (curr_angle_diff > 10 and curr_angle_diff < 350):
             # if curr_pos_dist > threshold_step_size or curr_angle_diff > 10: # If the angle is larger than 10 or the distance is more than the threshold step size
                 return i 
             

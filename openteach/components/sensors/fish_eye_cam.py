@@ -62,6 +62,7 @@ class FishEyeCamera(Component):
             ret, frame = self.cap.read()
         timestamp = time.time()
         return frame, timestamp
+    
     def stream(self):
         # Starting the fisheye stream
         self.notify_component_start('FishEye')

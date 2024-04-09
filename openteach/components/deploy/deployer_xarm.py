@@ -60,7 +60,7 @@ class DeployServer(Component):
                         cartesian_coords = robot_action_dict[robot]['cartesian']
 
                         # gripper
-                        if gripper_action > 0.4: #400: # 0.5:
+                        if gripper_action > 0.25: #0.4: #400: # 0.5:
                             self._robots[robot].set_gripper_state(800)
                         else:
                             self._robots[robot].set_gripper_state(0)

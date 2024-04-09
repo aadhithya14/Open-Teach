@@ -1,12 +1,12 @@
 
 preprocessor_module:
   _target_: openteach.preprocess.Preprocessor
-  data_path: extracted_data/pick_can_test/ # Path to the extracted data
+  data_path: extracted_data/pick_can_test_ot/ # Path to the extracted data
   modules:
     robot: ${robot_cfg}
     image: ${image_cfg} # - this is only for tactile training
     # tactile: ${tactile_cfg}
-  dump_data_indices: false #true
+  dump_data_indices: true
   process_single_demo: false
 
 robot_cfg:
@@ -15,12 +15,12 @@ robot_cfg:
   robot_names: ['xarm'] #['allegro', 'franka']
   robot_thresholds: # If robot thresholds are set to 0 then it will basically not subsample
     # hand: 0.005
-    arm: 0.1 #0.01 # corresponding thresholds to the robot_names
+    arm: 10 #0.1 #0.01 # corresponding thresholds to the robot_names
   # dump_fingertips: true
 
 image_cfg:
   _target_: openteach.preprocess.ImagePreprocessor
-  camera_id: 2 #0
+  camera_id: 0 #0
   # camera_ids: [0,1,2]
   is_ssl: false
   time_difference: 1 # If the there is no set time difference we will not apply preprocessing for images

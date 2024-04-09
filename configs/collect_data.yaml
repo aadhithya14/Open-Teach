@@ -6,7 +6,7 @@ defaults:
   - override hydra/hydra_logging: disabled  
   - override hydra/job_logging: disabled 
 
-storage_path: extracted_data/pick_can_ego/
+storage_path: extracted_data/pick_can_test/
 demo_num: 271
 sim_env: false
 is_xela: false
