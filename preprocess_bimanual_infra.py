@@ -13,6 +13,7 @@ from pathlib import Path
 DATA_PATH = Path("/home/siddhant/github/Open-Teach/extracted_data/pick_can_test_ot")
 num_demos = 5
 num_cams = 4
+states_file_name = "states"
 
 for num in range(1, num_demos+1):
     print("Processing demonstration", num)
@@ -133,10 +134,10 @@ for num in range(1, num_demos+1):
     gripper_positions_test = pd.DataFrame(gripper_positions)
 
     state_test = pd.concat([state_timestamps_test, state_positions_test, gripper_positions_test], axis=1)
-    with open(output_path + 'big_align_state_action_df_192.168.86.230.csv', 'a') as f:
+    with open(output_path + f'big_{states_file_name}.csv', 'a') as f:
         state_test.to_csv(f, header=["created timestamp", "pose_aa", "gripper_state"], index=False)
 
-    df = pd.read_csv(output_path + 'big_align_state_action_df_192.168.86.230.csv')
+    df = pd.read_csv(output_path + f'big_{states_file_name}.csv')
     for i in range(len(reference_timestamps)):
             curlist = []
             for j in range(len(state_timestamps)):
@@ -144,13 +145,13 @@ for num in range(1, num_demos+1):
             min_index = curlist.index(min(curlist))
             min_df = df.iloc[min_index]
             min_df = min_df.to_frame().transpose()
-            with open(output_path + 'align_state_action_df_192.168.86.230.csv', 'a') as f:
+            with open(output_path + f'{states_file_name}.csv', 'a') as f:
                 min_df.to_csv(f, header=f.tell()==0, index=False)
 
     # Create folders for each camera if they don't exist
     output_folder = output_path + "output"
     os.makedirs(output_folder, exist_ok=True)
-    camera_folders = [f"camera{i+1}" for i in range(num_cams)]
+    camera_folders = [f"camera{i}" for i in range(num_cams)]
     for folder in camera_folders:
         os.makedirs(os.path.join(output_folder, folder), exist_ok=True)
 
@@ -194,7 +195,7 @@ for num in range(1, num_demos+1):
 
         return consecutive_ranges
 
-    csv_file = os.path.join(output_path, "align_state_action_df_192.168.86.230.csv")
+    csv_file = os.path.join(output_path, f"{states_file_name}.csv")
     left_indexs_to_delete = find_consecutive_positions(csv_file)
 
     def get_timestamp_from_filename(filename):
@@ -217,7 +218,7 @@ for num in range(1, num_demos+1):
     def save_only_videos(base_folder_path):
         base_folder_path = os.path.join(base_folder_path, 'output')
         # Iterate over each camera folder
-        for cam in range(1, num_cams+1):  # Iterating from camera1 to camera6
+        for cam in range(num_cams):  # Iterating from camera1 to camera6
             cam_folder = f'camera{cam}'
             full_folder_path = os.path.join(base_folder_path, cam_folder)
             
