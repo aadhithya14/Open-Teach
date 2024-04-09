@@ -34,11 +34,18 @@ for num in range(1, num_demos+1):
 
     state_timestamps = np.array(state_timestamps)
 
-    # Set minimum timestap to the first instance the robot moves
+    # Set minimum timestamp to the first instance the robot moves
     min_timestamp_idx = 0
     for i in range(1, len(state_positions)):
         if not np.array_equal(state_positions[i], state_positions[i-1]):
             min_timestamp_idx = i
+            break
+    
+    # Set max timestamp to the last instance the robot moves
+    max_timestamp_idx = len(state_positions) - 1
+    for i in range(len(state_positions) - 2, min_timestamp_idx-1, -1):
+        if not np.array_equal(state_positions[i], state_positions[i+1]):
+            max_timestamp_idx = i
             break
     
     # read metadata file
@@ -61,15 +68,25 @@ for num in range(1, num_demos+1):
         if max(cam_timestamps) < state_timestamps[min_timestamp_idx]:
             cam_timestamps *= 1000
 
-        # filter timestamps before the robot moves
-        cam_timestamps = cam_timestamps[cam_timestamps >= state_timestamps[min_timestamp_idx]]
+        # valid indices 
+        discard_start = cam_timestamps < state_timestamps[min_timestamp_idx]
+        discard_end = cam_timestamps > state_timestamps[max_timestamp_idx]
+        valid_indices = ~(discard_start | discard_end)
+        cam_timestamps = cam_timestamps[valid_indices]
+
+        # # filter timestamps before the robot moves
+        # cam_timestamps = cam_timestamps[cam_timestamps >= state_timestamps[min_timestamp_idx] and cam_timestamps <= state_timestamps[max_timestamp_idx]]
+
+        # # filter timestamps after the robot stops moving
+        # cam_timestamps = cam_timestamps[cam_timestamps <= state_timestamps[max_timestamp_idx]]
 
         # if no valid timestamps, skip
         if len(cam_timestamps) == 0:
             skip = True
             break
 
-        CAM_VALID_LENS.append(len(cam_timestamps))
+        # CAM_VALID_LENS.append(len(cam_timestamps))
+        CAM_VALID_LENS.append((sum(discard_start), sum(discard_end)))
         CAM_TIMESTAMPS.append(cam_timestamps)
     if skip:
         continue
@@ -89,7 +106,8 @@ for num in range(1, num_demos+1):
 
         # save frames
         cam_frames = np.array(cam_frames)
-        cam_frames = cam_frames[-CAM_VALID_LENS[idx]:]
+        # cam_frames = cam_frames[-CAM_VALID_LENS[idx]:]
+        cam_frames = cam_frames[CAM_VALID_LENS[idx][0]:-CAM_VALID_LENS[idx][1]]
         CAM_FRAMES.append(cam_frames)
 
     rgb_frames = CAM_FRAMES

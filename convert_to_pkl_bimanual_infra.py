@@ -59,9 +59,15 @@ for i, data_point in enumerate(dirs):
     # Separate the pose into values instead of string
     cartesian_states = state['pose_aa'].values
     cartesian_states = np.array([np.array([float(x.strip()) for x in pose[1:-1].split(',')]) for pose in cartesian_states], dtype=np.float32)
-    gripper_states = state['gripper_state'].values
-    observation["cartesian_states"] = cartesian_states
-    observation["gripper_states"] = gripper_states
+    # Convert roll-pitch-yaw to sin-cos
+    cartesian_pos = cartesian_states[:, :3]
+    cartesian_ori = cartesian_states[:, 3:]
+    cartesian_ori = np.concatenate([np.sin(cartesian_ori), np.cos(cartesian_ori)], axis=1)
+    cartesian_states = np.concatenate([cartesian_pos, cartesian_ori], axis=1)
+    # rest
+    gripper_states = state['gripper_state'].values.astype(np.float32)
+    observation["cartesian_states"] = cartesian_states.astype(np.float32)
+    observation["gripper_states"] = gripper_states.astype(np.float32)
     
     # update max and min
     if max_cartesian is None:
