@@ -68,6 +68,8 @@ for i, data_point in enumerate(dirs):
     gripper_states = state['gripper_state'].values.astype(np.float32)
     observation["cartesian_states"] = cartesian_states.astype(np.float32)
     observation["gripper_states"] = gripper_states.astype(np.float32)
+    # # Relative cartesian states
+    # relative_cartesian_states = np.diff(cartesian_states, axis=0)
     
     # update max and min
     if max_cartesian is None:

@@ -150,7 +150,7 @@ for num in range(1, num_demos+1):
     state_positions_test = pd.DataFrame({'column': [list(row) for row in state_positions_test]})
     # convert left_gripper to True and False
     gripper_positions_test = pd.DataFrame(gripper_positions)
-
+    
     state_test = pd.concat([state_timestamps_test, state_positions_test, gripper_positions_test], axis=1)
     with open(output_path + f'big_{states_file_name}.csv', 'a') as f:
         state_test.to_csv(f, header=["created timestamp", "pose_aa", "gripper_state"], index=False)
@@ -188,33 +188,33 @@ for num in range(1, num_demos+1):
             image_output_path = os.path.join(output_folder, camera_folder, f"frame_{i}_{timestamps[camera_index][indexx]}.jpg")
             cv2.imwrite(image_output_path, frame)
 
-    def find_consecutive_positions(csv_file): ### need to be modified to consider gripper states
-        df = pd.read_csv(csv_file)
-        consecutive_ranges = []
-        start_idx = None
-        prev_position = None
-        ending_idx = len(df)-1
+    # def find_consecutive_positions(csv_file): ### need to be modified to consider gripper states
+    #     df = pd.read_csv(csv_file)
+    #     consecutive_ranges = []
+    #     start_idx = None
+    #     prev_position = None
+    #     ending_idx = len(df)-1
 
-        for idx, row in df.iterrows():
-            current_position = row['pose_aa']
+    #     for idx, row in df.iterrows():
+    #         current_position = row['pose_aa']
 
-            if prev_position is None:
-                start_idx = idx
-                prev_position = current_position
-            elif current_position != prev_position:
-                if idx - start_idx >= 2:
-                    consecutive_ranges.append((start_idx, idx - 1))
-                start_idx = idx
-                prev_position = current_position
+    #         if prev_position is None:
+    #             start_idx = idx
+    #             prev_position = current_position
+    #         elif current_position != prev_position:
+    #             if idx - start_idx >= 2:
+    #                 consecutive_ranges.append((start_idx, idx - 1))
+    #             start_idx = idx
+    #             prev_position = current_position
 
-        if prev_position is not None and len(df) - start_idx >= 2:
-            consecutive_ranges.append((start_idx, len(df) - 1))
+    #     if prev_position is not None and len(df) - start_idx >= 2:
+    #         consecutive_ranges.append((start_idx, len(df) - 1))
 
 
-        return consecutive_ranges
+    #     return consecutive_ranges
 
     csv_file = os.path.join(output_path, f"{states_file_name}.csv")
-    left_indexs_to_delete = find_consecutive_positions(csv_file)
+    # left_indexs_to_delete = find_consecutive_positions(csv_file)
 
     def get_timestamp_from_filename(filename):
         # Extract the timestamp from the filename using regular expression
@@ -228,8 +228,10 @@ for num in range(1, num_demos+1):
     for file in [csv_file]: #, right_csv_file):
         df = pd.read_csv(file)
         df['desired_gripper_state'] = df['gripper_state'].shift(-1)
-        # Step 3: For the last timestamp, set "desired_gripper_flag" to the value of the previous row
+        # Step 3a: For the last timestamp, set "desired_gripper_flag" to the value of the previous row
         df.loc[df.index[-1], 'desired_gripper_state'] = df.loc[df.index[-2], 'gripper_state']
+        # # Step 3b: Only save indices correspnding to those in index[-1]
+        # df = df.iloc[index[-1]]
         # Step 4: Update the CSV file with the modified DataFrame
         df.to_csv(file, index=False)
 
