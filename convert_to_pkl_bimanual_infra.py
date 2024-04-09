@@ -25,6 +25,7 @@ observations = []
 
 # Store max and min
 max_cartesian, min_cartesian = None, None
+# max_rel_cartesian, min_rel_cartesian = None, None
 max_gripper, min_gripper = None, None
 
 # Load each data point and save in a list
@@ -70,6 +71,8 @@ for i, data_point in enumerate(dirs):
     observation["gripper_states"] = gripper_states.astype(np.float32)
     # # Relative cartesian states
     # relative_cartesian_states = np.diff(cartesian_states, axis=0)
+    # relative_cartesian_states = np.concatenate([relative_cartesian_states, np.zeros((1, 9))], axis=0)
+    # observation["relative_cartesian_states"] = relative_cartesian_states
     
     # update max and min
     if max_cartesian is None:
@@ -78,6 +81,12 @@ for i, data_point in enumerate(dirs):
     else:
         max_cartesian = np.maximum(max_cartesian, np.max(cartesian_states, axis=0))
         min_cartesian = np.minimum(min_cartesian, np.min(cartesian_states, axis=0))
+    # if max_rel_cartesian is None:
+    #     max_rel_cartesian = np.max(relative_cartesian_states, axis=0)
+    #     min_rel_cartesian = np.min(relative_cartesian_states, axis=0)
+    # else:
+    #     max_rel_cartesian = np.maximum(max_rel_cartesian, np.max(relative_cartesian_states, axis=0))
+    #     min_rel_cartesian = np.minimum(min_rel_cartesian, np.min(relative_cartesian_states, axis=0))
     if max_gripper is None:
         max_gripper = np.max(gripper_states)
         min_gripper = np.min(gripper_states)
