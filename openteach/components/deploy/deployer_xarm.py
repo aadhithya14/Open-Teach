@@ -65,6 +65,13 @@ class DeployServer(Component):
                         else:
                             self._robots[robot].set_gripper_state(0)
                         
+                        # compute the cartesian coords given relative coords
+                        # current_pos = self._robots[robot].get_cartesian_state()['cartesian_position']
+                        # cartesian_coords = np.array(current_pos) + np.array(cartesian_coords)
+                        # delta = cartesian_coords
+                        # cartesian_coords = self.cart_pose
+                        # cartesian_coords[:3] += delta[:3]
+
                         # cartesian
                         self._robots[robot].arm_control(cartesian_coords)
 
@@ -105,6 +112,7 @@ class DeployServer(Component):
                     cartesian_state['orientation'],
                     gripper_state['position']
                 ])
+                self.cart_pose = robot_state[:6]
                 data[robot_name] = robot_state
             # # Get the cartesian state for kinova
             # elif robot_name == 'kinova' or robot_name == 'franka':

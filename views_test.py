@@ -21,11 +21,13 @@ def test_camera_index(index):
 
         if cv2.waitKey(1) == ord('q'):
             break
+        # print(index)
+        # break
 
     cap.release()
     cv2.destroyAllWindows()
 
 # Test camera indices from 0 to 100
 if __name__ == "__main__":
-    for camera_id in range(100):
+    for camera_id in [18]: #range(100):
         test_camera_index(camera_id)
