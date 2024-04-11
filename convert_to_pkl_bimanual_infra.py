@@ -6,7 +6,7 @@ import cv2
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
 
-DATASET_PATH = Path("extracted_data/pick_can_test_ot")
+DATASET_PATH = Path("extracted_data/pick_green_cup")
 # num_cams = 3
 camera_indices = [0,1,2,3]
 img_size = (128, 128)

@@ -10,8 +10,8 @@ import shutil
 import h5py
 from pathlib import Path
 
-DATA_PATH = Path("/home/siddhant/github/Open-Teach/extracted_data/pick_can_test_ot")
-num_demos = 5
+DATA_PATH = Path("/home/siddhant/github/Open-Teach/extracted_data/pick_green_cup")
+num_demos = 3
 num_cams = 4
 states_file_name = "states"
 
@@ -67,13 +67,15 @@ for num in range(1, num_demos+1):
         # Fish eye cam timestamps are divided by 1000
         if max(cam_timestamps) < state_timestamps[min_timestamp_idx]:
             cam_timestamps *= 1000
+        elif min(cam_timestamps) > state_timestamps[max_timestamp_idx]:
+            cam_timestamps /= 1000
 
         # valid indices 
         discard_start = cam_timestamps < state_timestamps[min_timestamp_idx]
         discard_end = cam_timestamps > state_timestamps[max_timestamp_idx]
         valid_indices = ~(discard_start | discard_end)
         cam_timestamps = cam_timestamps[valid_indices]
-
+        
         # # filter timestamps before the robot moves
         # cam_timestamps = cam_timestamps[cam_timestamps >= state_timestamps[min_timestamp_idx] and cam_timestamps <= state_timestamps[max_timestamp_idx]]
 
@@ -107,7 +109,10 @@ for num in range(1, num_demos+1):
         # save frames
         cam_frames = np.array(cam_frames)
         # cam_frames = cam_frames[-CAM_VALID_LENS[idx]:]
-        cam_frames = cam_frames[CAM_VALID_LENS[idx][0]:-CAM_VALID_LENS[idx][1]]
+        if CAM_VALID_LENS[idx][1] == 0:
+            cam_frames = cam_frames[CAM_VALID_LENS[idx][0]:]
+        else:
+            cam_frames = cam_frames[CAM_VALID_LENS[idx][0]:-CAM_VALID_LENS[idx][1]]
         CAM_FRAMES.append(cam_frames)
 
     rgb_frames = CAM_FRAMES
