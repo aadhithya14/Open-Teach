@@ -38,7 +38,7 @@ class SimInformationRecord(Recorder):
         self.jointanglesubscriber =  ZMQKeypointSubscriber(
             host = host,
             port = actualjointanglesubscribeport,
-            topic= 'joint_states'
+            topic= 'current_angles'
         )
         # Subscriber for Timestamps
         self.timestampsubscriber =  ZMQKeypointSubscriber(
@@ -95,40 +95,33 @@ class SimInformationRecord(Recorder):
             try:
                 timestamps= self.timestampsubscriber.recv_keypoints()
                 if self.robot=='allegro':
-                    if self.recorder_function_key=='joint_states':
+                    if self.recorder_function_key =='joint_states':
                         actual_joint_angles=self.jointanglesubscriber.recv_keypoints()
                     else:
-                        actual_joint_angles=self.subscriber.recv_keypoints()
-                elif self.robot=='moving_allegro':
-                    if self.recorder_function_key=='joint_states':
+                        commanded_joint_angles=self.subscriber.recv_keypoints()
+                elif self.robot=='moving_allegro' or self.robot=='franka_allegro':
+                    if self.recorder_function_key =='joint_states':
                         actual_joint_angles=self.jointanglesubscriber.recv_keypoints()
+                        print("Entering joint states")
                     elif self.recorder_function_key=='cartesian_states':
                         actual_endeff_coords=self.end_eff_coords_actual.recv_keypoints()
+                        print("Entering cartesian states")
                     elif self.recorder_function_key=='commanded_cartesian_states':
-                        actual_endeff_coords=self.endeffector_pos_subscriber.recv_keypoints()
+                        commanded_endeff_coords=self.endeffector_pos_subscriber.recv_keypoints()
+                        print("Entering Commanded Cartesian States")
                     else:
-                        actual_joint_angles=self.subscriber.recv_keypoints()
+                        commanded_joint_angles=self.subscriber.recv_keypoints()
+                        print("Entering Commanded Joint States")
                 else:
-                    if self.recorder_function_key=='joint_states':
+                    if self.recorder_function_key=='cartesian_states':
                         actual_endeff_coords=self.end_eff_coords_actual.recv_keypoints()
                     else:
                         actual_endeff_coords=self.endeffector_pos_subscriber.recv_keypoints()
                
-                timestamps= self.timestampsubscriber.recv_keypoints()
+                # timestamps= self.timestampsubscriber.recv_keypoints()
                 # proprio
                 for key in ['position', 'timestamps']:  
                     if self.robot=='allegro':
-                        if key not in self.robot_information.keys():
-                            if key =='timestamps':
-                                self.robot_information[key]=[timestamps]
-                            elif key =='position':
-                                self.robot_information[key]=[actual_joint_angles]   
-                        else:
-                            if key =='timestamps':
-                                self.robot_information[key].append(timestamps)
-                            elif key =='position':
-                                self.robot_information[key].append(actual_joint_angles)
-                    elif self.robot=='moving_allegro':
                         if self.recorder_function_key == 'joint_states':
                             if key not in self.robot_information.keys():
                                 if key =='timestamps':
@@ -140,6 +133,55 @@ class SimInformationRecord(Recorder):
                                     self.robot_information[key].append(timestamps)
                                 elif key =='position':
                                     self.robot_information[key].append(actual_joint_angles)
+                        elif self.recorder_function_key == 'commanded_joint_states':
+                            if key not in self.robot_information.keys():
+                                if key =='timestamps':
+                                    self.robot_information[key]=[timestamps]
+                                elif key =='position':
+                                    self.robot_information[key]=[commanded_joint_angles]   
+                            else:
+                                if key =='timestamps':
+                                    self.robot_information[key].append(timestamps)
+                                elif key =='position':
+                                    self.robot_information[key].append(commanded_joint_angles)
+                    elif self.robot=='moving_allegro' or self.robot== 'franka_allegro':
+                        if self.recorder_function_key == 'joint_states':
+                            if key not in self.robot_information.keys():
+                                if key =='timestamps':
+                                    self.robot_information[key]=[timestamps]
+                                elif key =='position':
+                                    self.robot_information[key]=[actual_joint_angles]   
+                            else:
+                                if key =='timestamps':
+                                    self.robot_information[key].append(timestamps)
+                                elif key =='position':
+                                    self.robot_information[key].append(actual_joint_angles)
+                            print('Joint angles recorded', actual_joint_angles)
+
+                        elif self.recorder_function_key == 'commanded_joint_states':
+                            if key not in self.robot_information.keys():
+                                if key =='timestamps':
+                                    self.robot_information[key]=[timestamps]
+                                elif key =='position':
+                                    self.robot_information[key]=[commanded_joint_angles]   
+                            else:
+                                if key =='timestamps':
+                                    self.robot_information[key].append(timestamps)
+                                elif key =='position':
+                                    self.robot_information[key].append(commanded_joint_angles)
+
+                        elif self.recorder_function_key == 'commanded_cartesian_states':
+                            if key not in self.robot_information.keys():
+                                if key =='timestamps':
+                                    self.robot_information[key]=[timestamps]
+                                elif key =='position':
+                                    self.robot_information[key]=[commanded_endeff_coords]   
+                            else:
+                                if key =='timestamps':
+                                    self.robot_information[key].append(timestamps)
+                                elif key =='position':
+                                    self.robot_information[key].append(commanded_endeff_coords)
+                        
                         else:
                             if key not in self.robot_information.keys():
                                 if key =='timestamps':
@@ -153,17 +195,29 @@ class SimInformationRecord(Recorder):
                                 elif key =='position':
                                     self.robot_information[key].append(actual_endeff_coords)
                     else:
-                        if key not in self.robot_information.keys():
-                            if key =='timestamps':
-                                self.robot_information[key]=[timestamps]
-                            elif key =='position':
-                                self.robot_information[key]=[actual_endeff_coords]   
+                        if self.recorder_function_key == 'cartesian_states':
+                            if key not in self.robot_information.keys():
+                                if key =='timestamps':
+                                    self.robot_information[key]=[timestamps]
+                                elif key =='position':
+                                    self.robot_information[key]=[actual_endeff_coords]   
+                            else:
+                                if key =='timestamps':
+                                    self.robot_information[key].append(timestamps)
+                                elif key =='position':
+                                    self.robot_information[key].append(actual_endeff_coords)
+                                
                         else:
-                            if key =='timestamps':
-                                self.robot_information[key].append(timestamps)
-                            elif key =='position':
-                                self.robot_information[key].append(actual_endeff_coords)
-                            
+                            if key not in self.robot_information.keys():
+                                if key =='timestamps':
+                                    self.robot_information[key]=[timestamps]
+                                elif key =='position':
+                                    self.robot_information[key]=[commanded_endeff_coords]   
+                            else:
+                                if key =='timestamps':
+                                    self.robot_information[key].append(timestamps)
+                                elif key =='position':
+                                    self.robot_information[key].append(commanded_endeff_coords)
 
 
                 self.num_datapoints += 1
@@ -183,6 +237,7 @@ class SimInformationRecord(Recorder):
         with h5py.File(self._recorder_file_name, "w") as file:
             for key in self.robot_information.keys():
                 if key != 'timestamps':
+                    print("Keys saving", key)
                     self.robot_information[key] = np.array(self.robot_information[key], dtype = np.float32)
                     file.create_dataset(key +'s', data = self.robot_information[key], compression="gzip", compression_opts = 6)
                 else:
