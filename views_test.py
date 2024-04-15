@@ -15,19 +15,19 @@ def test_camera_index(index):
             print(f"Failed to capture frame from camera at index {index}")
             break
 
-        # print( "Frame default resolution: (" + str(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) + "; " + str(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) + ")")
-        # cv2.imshow(f"Camera {index}", frame)
-        # print(np.asanyarray(frame).shape)
+        print( "Frame default resolution: (" + str(cap.get(cv2.CAP_PROP_FRAME_WIDTH)) + "; " + str(cap.get(cv2.CAP_PROP_FRAME_HEIGHT)) + ")")
+        cv2.imshow(f"Camera {index}", frame)
+        print(np.asanyarray(frame).shape)
 
-        # if cv2.waitKey(1) == ord('q'):
-        #     break
-        print(index)
-        break
+        if cv2.waitKey(1) == ord('q'):
+            break
+        # print(index)
+        # break
 
     cap.release()
     cv2.destroyAllWindows()
 
 # Test camera indices from 0 to 100
 if __name__ == "__main__":
-    for camera_id in [18]: #range(100):
+    for camera_id in range(100):
         test_camera_index(camera_id)

@@ -6,9 +6,9 @@ import cv2
 from pathlib import Path
 from sentence_transformers import SentenceTransformer
 
-DATASET_PATH = Path("extracted_data/pick_green_cup")
+DATASET_PATH = Path("extracted_data/pick_honey_bottle")
 # num_cams = 3
-camera_indices = [0,1,2,3]
+camera_indices = [0,1,2,3,4]
 img_size = (128, 128)
 
 # Get task name sentence
