@@ -74,6 +74,9 @@ class XArm(RobotWrapper):
 
     def arm_control(self, cartesian_coords):
         self._controller.arm_control(cartesian_coords)
+    
+    def continue_control(self):
+        self._controller.continue_control()
 
     def move_velocity(self, input_velocity_values, duration):
         pass

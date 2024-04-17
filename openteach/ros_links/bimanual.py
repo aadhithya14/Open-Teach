@@ -63,6 +63,8 @@ class DexArmControl():
         #self._init_franka_arm_control(record)
         self.robot =Robot(ip, is_radian=True) 
 
+        self.desired_cartesian_pose = None
+
     # Controller initializers
     def _init_xarm_control(self):
        
@@ -118,6 +120,9 @@ class DexArmControl():
         self.robot.set_servo_cartesian_aa(
                     cartesian_pos, wait=False, relative=False, mvacc=200, speed=50)
 
+    def set_desired_cartesian_pose(self, cartesian_pose):
+        self.desired_cartesian_pose = cartesian_pose
+
     def arm_control(self, cartesian_pose):
         if self.robot.has_error:
             self.robot.clear()
@@ -125,6 +130,21 @@ class DexArmControl():
             self.robot.set_mode_and_state(RobotControlMode.SERVO_CONTROL, 0)
         self.robot.set_servo_cartesian_aa(
                     cartesian_pose, wait=False, relative=False, mvacc=200, speed=50)
+    
+    def continue_control(self):
+        if self.desired_cartesian_pose is None:
+            return
+        
+        curr_cartesian_pose = self.get_arm_cartesian_coords()
+
+        pos = curr_cartesian_pose[:3]
+        delta = self.desired_cartesian_pose[:3] - pos
+        delta = np.clip(delta, -2, 2)
+        pos = curr_cartesian_pose[:3] + delta
+        next_cartesian_pose = np.concatenate([pos, self.desired_cartesian_pose[3:]])
+        self.arm_control(next_cartesian_pose)
+
+        # self.robot.continue_move()
         
     def get_arm_joint_state(self):
         joint_positions =np.array(self.robot.get_servo_angle()[1])

@@ -10,9 +10,9 @@ import shutil
 import h5py
 from pathlib import Path
 
-DATA_PATH = Path("/home/siddhant/github/Open-Teach/extracted_data/pick_honey_bottle")
-num_demos = 2
-num_cams = 5
+DATA_PATH = Path("/home/siddhant/github/Open-Teach/extracted_data/2024.04.16_multitask_test/open_oven")
+num_demos = 5
+num_cams = 4
 states_file_name = "states"
 
 for num in range(1, num_demos+1):

@@ -12,6 +12,12 @@ class FrequencyTimer(object):
     def start_loop(self):
         self.start_time = time.time_ns()
 
+    def check_time(self, frequency_rate):
+        curr_time = time.time_ns()
+        if curr_time - self.start_time > 1e9 / frequency_rate:
+            return True
+        return False
+
     def end_loop(self):
         wait_time = self.time_available + self.start_time
         
