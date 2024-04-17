@@ -33,13 +33,13 @@ class RealsenseCameras(ProcessInstantiator):
         # Creating all the camera processes
         self._init_camera_processes()
 
-    def _start_component(self, cam_idx):
+    def _start_component(self, cam_idx, cam_serial_num):
         component = RealsenseCamera(
             stream_configs = dict(
                 host = self.configs.host_address,
                 port = self.configs.cam_port_offset + cam_idx
             ),
-            cam_serial_num = self.configs.robot_cam_serial_numbers[cam_idx],
+            cam_serial_num = cam_serial_num, #self.configs.robot_cam_serial_numbers[cam_idx],
             cam_id = cam_idx + 1,
             cam_configs = self.configs.cam_configs,
             stream_oculus = True if self.configs.oculus_cam == cam_idx else False
@@ -47,10 +47,13 @@ class RealsenseCameras(ProcessInstantiator):
         component.stream()
 
     def _init_camera_processes(self):
-        for cam_idx in range(len(self.configs.robot_cam_serial_numbers)):
+        # for cam_idx in range(len(self.configs.robot_cam_serial_numbers)):
+        for camera in self.configs.robot_cam_serial_numbers:
+            cam_idx = list(camera.keys())[0]
+            cam_serial_num = camera[cam_idx]
             self.processes.append(Process(
                 target = self._start_component,
-                args = (cam_idx, )
+                args = (cam_idx, cam_serial_num )
             ))
 
 class FishEyeCameras(ProcessInstantiator):
@@ -63,10 +66,10 @@ class FishEyeCameras(ProcessInstantiator):
         # Creating all the camera processes
         self._init_camera_processes()
 
-    def _start_component(self, cam_idx):
+    def _start_component(self, cam_idx, cam_serial_num):
         print('cam_idx: {}, stream_oculus: {}'.format(cam_idx, True if self.configs.oculus_cam == cam_idx else False))
         component = FishEyeCamera(
-            cam_index=self.configs.fisheye_cam_numbers[cam_idx],
+            cam_index=cam_serial_num, #self.configs.fisheye_cam_numbers[cam_idx],
             stream_configs = dict(
                 host = self.configs.host_address,
                 port = self.configs.fish_eye_cam_port_offset+ cam_idx,
@@ -79,42 +82,14 @@ class FishEyeCameras(ProcessInstantiator):
         component.stream()
 
     def _init_camera_processes(self):
-        for cam_idx in range(len(self.configs.fisheye_cam_numbers)):
+        # for cam_idx in range(len(self.configs.fisheye_cam_numbers)):
+        for camera in self.configs.fisheye_cam_numbers:
+            cam_idx = list(camera.keys())[0]
+            cam_serial_num = camera[cam_idx]
             self.processes.append(Process(
                 target = self._start_component,
-                args = (cam_idx, )
+                args = (cam_idx, cam_serial_num, )
             ))
-
-class EmeetCameras(ProcessInstantiator):
-    """
-    Returns all the camera processes. Start the list of processes to start
-    the camera stream.
-    """
-    def __init__(self, configs):
-        super().__init__(configs)
-        # Creating all the camera processes
-        self._init_camera_processes()
-
-    def _start_component(self, cam_idx):
-        component = EmeetCamera(
-            stream_configs = dict(
-                host = self.configs.host_address,
-                port = self.configs.cam_port_offset + cam_idx
-            ),
-            cam_serial_num = self.configs.robot_cam_serial_numbers[cam_idx],
-            cam_id = cam_idx + 1,
-            cam_configs = self.configs.cam_configs,
-            stream_oculus = True if self.configs.oculus_cam == cam_idx else False
-        )
-        component.stream()
-
-    def _init_camera_processes(self):
-        for cam_idx in range(len(self.configs.robot_cam_serial_numbers)):
-            self.processes.append(Process(
-                target = self._start_component,
-                args = (cam_idx, )
-            ))
-
 
 
 class TeleOperator(ProcessInstantiator):
@@ -200,9 +175,10 @@ class Collector(ProcessInstantiator):
     Returns all the recorder processes. Start the list of processes 
     to run the record data.
     """
-    def __init__(self, configs, demo_num):
+    def __init__(self, configs, demo_num, depth=False):
         super().__init__(configs)
         self.demo_num = demo_num
+        self.depth = depth
         self._storage_path = os.path.join(
             self.configs.storage_path, 
             'demonstration_{}'.format(self.demo_num)
@@ -277,25 +253,30 @@ class Collector(ProcessInstantiator):
         if self.configs.sim_env is not True:
             print("Camera recorder starting")
             cam_idx = 0
-            for cam_idx in range(len(self.configs.robot_cam_serial_numbers)):
+            # for cam_idx in range(len(self.configs.robot_cam_serial_numbers)):
+            for camera in self.configs.robot_cam_serial_numbers:
+                cam_idx = list(camera.keys())[0]
                 self.processes.append(Process(
                     target = self._start_rgb_component,
                     args = (cam_idx, )
                 ))
 
-                self.processes.append(Process(
-                    target = self._start_depth_component,
-                    args = (cam_idx, )
-                ))
+                if self.depth:
+                    self.processes.append(Process(
+                        target = self._start_depth_component,
+                        args = (cam_idx, )
+                    ))
 
             import yaml
             with open('configs/fisheyecamera.yaml') as file:
                 fish_eye_cam_configs = yaml.load(file, Loader=yaml.FullLoader)
-            for fisheye_cam_idx in range(len(fish_eye_cam_configs['fisheye_cam_numbers'])):
+            # for fisheye_cam_idx in range(len(fish_eye_cam_configs['fisheye_cam_numbers'])):
+            for camera in fish_eye_cam_configs['fisheye_cam_numbers']:
+                fisheye_cam_idx = list(camera.keys())[0]
                 self.processes.append(Process(
                     target = self._start_fish_eye_component,
                     # args = (cam_idx + 1 + fisheye_cam_idx, )
-                    args = (cam_idx, fisheye_cam_idx, )
+                    args = (fisheye_cam_idx, )
                 ))
         else:
           
@@ -305,10 +286,11 @@ class Collector(ProcessInstantiator):
                     args = (cam_idx, )
                 ))
 
-                self.processes.append(Process(
-                    target = self._start_depth_component,
-                    args = (cam_idx, )
-                ))
+                if self.depth:
+                    self.processes.append(Process(
+                        target = self._start_depth_component,
+                        args = (cam_idx, )
+                    ))
 
     #Function to start the sim recorders
     def _init_sim_recorders(self):
@@ -340,13 +322,13 @@ class Collector(ProcessInstantiator):
             ))
 
     #Function to start the fish eye recorders
-    def _start_fish_eye_component(self, cam_idx, fish_eye_cam_idx):
+    def _start_fish_eye_component(self, cam_idx):
         component = FishEyeImageRecorder(
             host = self.configs.host_address,
-            image_stream_port = self.configs.fish_eye_cam_port_offset + fish_eye_cam_idx,
+            image_stream_port = self.configs.fish_eye_cam_port_offset + cam_idx,
             storage_path = self._storage_path,
-            # filename = 'cam_{}_rgb_video'.format(cam_idx)
-            filename = 'cam_{}_rgb_video'.format(cam_idx + 1 + fish_eye_cam_idx)
+            filename = 'cam_{}_rgb_video'.format(cam_idx)
+            # filename = 'cam_{}_rgb_video'.format(cam_idx + 1 + fish_eye_cam_idx)
         )
         component.stream()
 
