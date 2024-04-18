@@ -12,15 +12,14 @@ task_names = ["lift_up_lid", "open_oven", "pick_bowl_from_rack"]
 camera_indices = [1,2,3,4,51,52]
 img_size = (128, 128)
 
+# Create the save path
+SAVE_DATA_PATH.mkdir(parents=True, exist_ok=True)
+
 
 for TASK_NAME in task_names:
     DATASET_PATH = Path(f"{PROCESSED_DATA_PATH}/{TASK_NAME}")
-    SAVE_PATH = Path(f"{SAVE_DATA_PATH}/{TASK_NAME}")
-    SAVE_PATH.mkdir(parents=True, exist_ok=True)
 
     # Get task name sentence
-    # task_name = DATASET_PATH.name.split("/")[-1]
-    # task_name = task_name.replace("_", " ")
     label_path = DATASET_PATH / "label.txt"
     task_name = label_path.read_text().strip()
     print(f"Task name: {task_name}")
@@ -113,5 +112,4 @@ for TASK_NAME in task_names:
         'min_gripper': min_gripper,
         'task_emb': task_emb
     }
-    # pkl.dump(data, open(DATASET_PATH / 'expert_demos.pkl', "wb"))
-    pkl.dump(data, open(SAVE_PATH / f'{TASK_NAME}.pkl', "wb"))
+    pkl.dump(data, open(SAVE_DATA_PATH / f'{TASK_NAME}.pkl', "wb"))
