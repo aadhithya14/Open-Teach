@@ -7,7 +7,7 @@ from multiprocessing import Process
 from openteach.components import Component
 from openteach.utils.network import create_response_socket
 from openteach.utils.timer import FrequencyTimer
-from openteach.constants import DEPLOY_FREQ, ROBOT_CMD_FREQ #, VR_FREQ
+from openteach.constants import DEPLOY_FREQ, POLICY_FREQ #, VR_FREQ
 
 class DeployServer(Component):
     def __init__(self, configs):
@@ -25,8 +25,8 @@ class DeployServer(Component):
             port = self.configs.deployment_port
         )
 
-        # self.timer = FrequencyTimer(DEPLOY_FREQ)
-        self.timer = FrequencyTimer(ROBOT_CMD_FREQ)
+        self.timer = FrequencyTimer(DEPLOY_FREQ)
+        # self.timer = FrequencyTimer(POLICY_FREQ)
 
     def _init_robot_subscribers(self):
         robot_controllers = hydra.utils.instantiate(self.configs.robot.controllers)
@@ -45,7 +45,7 @@ class DeployServer(Component):
         self.deployment_socket.send(pickle.dumps(True, protocol = -1))
 
     def _perform_robot_action(self, robot_action_dict):
-        try:
+        # try:
 
             # Kinova should be applied earlier than allegro
             robot_order = ['xarm'] #['franka', 'allegro']
@@ -100,9 +100,9 @@ class DeployServer(Component):
             #             self._robots[robot].move(robot_action_dict[robot])
                     # print('Applying action {} on robot: {}'.format(robot_action_dict[robot], robot))
             return True
-        except:
-            print(f'robot: {robot} failed executing in perform_robot_action')
-            return False
+        # except:
+        #     print(f'robot: {robot} failed executing in perform_robot_action')
+        #     return False
 
     def _continue_robot_action(self):
         try:
@@ -172,11 +172,12 @@ class DeployServer(Component):
         # self.visualizer_process.start()
         while True:
             # try:
-                print('\nListening')
+                # print('\nListening')
                 self.timer.start_loop()
 
-                if self.timer.check_time(ROBOT_CMD_FREQ):
+                if self.timer.check_time(POLICY_FREQ):
                     # robot_action = pickle.loads(self.deployment_socket.recv())
+                    print('Waiting for robot action.')
                     robot_action = self.deployment_socket.recv()
 
                     if robot_action == b'get_state':
