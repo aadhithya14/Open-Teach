@@ -508,7 +508,7 @@ class AllegroHandMovingEnv(Hand_Env):
             self.gym.refresh_rigid_body_state_tensor(self.sim)
             self.gym.simulate(self.sim)
             actual_joint_angles= self.get_dof_position()
-            self.actualanglepublisher.pub_keypoints(actual_joint_angles,'joint_states')
+            self.actualanglepublisher.pub_keypoints(actual_joint_angles,'current_angles')
             self.gym.fetch_results(self.sim, True)
             self.gym.step_graphics(self.sim)
             self.gym.render_all_camera_sensors(self.sim)
