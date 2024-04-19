@@ -24,15 +24,15 @@ class RobotWrapper(ABC):
     def get_joint_position(self):
         pass
 
-    @abstractmethod
+    # @abstractmethod
     def get_cartesian_position(self):
         pass
 
-    @abstractmethod
+    # @abstractmethod
     def get_joint_velocity(self):
         pass
 
-    @abstractmethod
+    # @abstractmethod
     def get_joint_torque(self):
         pass
 
