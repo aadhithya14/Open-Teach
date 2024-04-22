@@ -47,13 +47,6 @@ class SimInformationRecord(Recorder):
             topic= 'timestamps'
         )
 
-        # Subscriber for End effector position
-        self.endeffector_pos_subscriber =  ZMQKeypointSubscriber(
-            host = host,
-            port = jointanglesubscribeport,
-            topic= 'endeffector_pos'
-        )
-
         # Subscriber for Actual End effector position
         self.end_eff_coords_actual =  ZMQKeypointSubscriber(
             host = host,
