@@ -5,7 +5,7 @@ from .operator import Operator
 from shapely.geometry import Point, Polygon 
 from shapely.ops import nearest_points
 from .calibrators.allegro import OculusThumbBoundCalibrator
-from openteach.robot.allegro.allegro import AllegroHand
+# from openteach.robot.allegro.allegro import AllegroHand
 from openteach.robot.allegro.allegro_retargeters import AllegroKDLControl, AllegroJointControl
 from openteach.utils.files import *
 from openteach.utils.vectorops import coord_in_bound
