@@ -21,10 +21,8 @@ extracted_data/*
 
 urdf/*
 # *.png
-*.jpg
-*.txt
 # *.npy
-*.h5
+# *.h5
 
 *.mp4
 
